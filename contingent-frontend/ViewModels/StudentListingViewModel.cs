@@ -1,18 +1,15 @@
-﻿using contingent_frontend.Models;
+﻿using contingent_frontend.Helpers;
+using contingent_frontend.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Interactivity;
 
-namespace contingent_frontend
+namespace contingent_frontend.ViewModels
 {
-    class ApplicationViewModel : INotifyPropertyChanged
+    class StudentListingViewModel : BaseViewModel
     {
         private BindingList<GroupNode> groups;
         public BindingList<GroupNode> Groups
@@ -25,13 +22,14 @@ namespace contingent_frontend
             }
         }
 
+        private BindingList<Student> currentStudents;
         public BindingList<Student> CurrentStudents
         {
-            get
+            get => currentStudents;
+            set
             {
-                if (SelectedGroup != null)
-                    return SelectedGroup.Students;
-                else return null;
+                currentStudents = value;
+                OnPropertyChanged();
             }
         }
 
@@ -53,6 +51,7 @@ namespace contingent_frontend
             set
             {
                 selectedGroup = value;
+                CurrentStudents = selectedGroup.Students;
                 OnPropertyChanged();
             }
         }
@@ -82,6 +81,7 @@ namespace contingent_frontend
                     {
                         var a = obj as Student;
                         if (a != null) CurrentStudents.Remove(a);
+
                     },
                     (obj) => SelectedGroup == null || SelectedGroup.Students.Count < 1 ? false : true
                     ));
@@ -124,22 +124,9 @@ namespace contingent_frontend
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string prop = "")
+        public StudentListingViewModel()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
-
-        public ApplicationViewModel()
-        {
-            Groups = new BindingList<GroupNode>();
-            var node = new GroupNode
-            {
-                Name = "1ПКС-17",
-                Students = new BindingList<Student>()
-            };
-
-            Groups.Add(node);
+            Groups = new BindingList<GroupNode>(API.GetGroupNodes());
         }
     }
 }

@@ -6,52 +6,24 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:contingent_frontend"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" x:Name="View">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoadedCommand}" 
+                                   CommandParameter="{Binding ElementName=View}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
-            <RowDefinition Height="40"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.30*" MaxWidth="200"></ColumnDefinition>
+            <ColumnDefinition MaxWidth="30"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TreeView x:Name="GroupTree" Grid.Row="1" Grid.Column="0" Margin="10" ItemsSource="{Binding Groups}" >
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Students}">
-                    <TextBlock Text="{Binding Name}"/>
-                    <HierarchicalDataTemplate.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding ShortName}"/>
-                        </DataTemplate>
-                    </HierarchicalDataTemplate.ItemTemplate>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectedItemChanged">
-                    <i:InvokeCommandAction 
-                         Command="{Binding SelectedStudentTreeChange}"
-                         CommandParameter="{Binding SelectedItem, ElementName=GroupTree}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </TreeView>
-        <DataGrid SelectedItem="{Binding SelectedStudent}" Grid.Row="1" Grid.Column="1" Margin="10" ItemsSource="{ Binding CurrentStudents }" AutoGenerateColumns="False" CanUserReorderColumns="false" IsReadOnly="true">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
-                <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <ToolBar VerticalAlignment="Stretch" Grid.ColumnSpan="2">
-            <Menu Width="auto">
-                <MenuItem Header="Администрирование">
-                    <MenuItem Header="Добавить группу" Command="{Binding NewGroupClicked}" CommandParameter="{Binding GroupTree}"></MenuItem>
-                </MenuItem>
-            </Menu>
-        </ToolBar>
-        <DockPanel Grid.Row="2" LastChildFill="false">
-            <Button DockPanel.Dock="Top"  Command="{Binding AddCommand}" >+</Button>
-            <Button DockPanel.Dock="Bottom" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedStudent}">-</Button>
-        </DockPanel>
+        <StackPanel Grid.Column="0" Orientation="Vertical">
+            <Button Command="{ Binding NavigateStudentListing }">+</Button>
+        </StackPanel>
+        <Frame Grid.Column="1" Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden" Opacity="1"></Frame>
     </Grid>
 </Window>
