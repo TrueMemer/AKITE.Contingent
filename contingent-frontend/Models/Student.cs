@@ -10,6 +10,8 @@ namespace contingent_frontend.Models
 {
     public class Student
     {
+        [JsonProperty("id")]
+        public int ID { get; set; }
         [JsonProperty("firstname")]
         public string FirstName { get; set; }
         [JsonProperty("lastname")]

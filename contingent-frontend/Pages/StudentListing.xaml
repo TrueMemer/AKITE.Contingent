@@ -3,8 +3,10 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:local="clr-namespace:contingent_frontend.Pages"
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="StudentListing">
@@ -13,19 +15,24 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
-            <RowDefinition Height="40"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.30*" MaxWidth="200"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TreeView x:Name="GroupTree" Grid.Row="1" Grid.Column="0" Margin="10" ItemsSource="{Binding Groups}" >
+        <TreeView BorderBrush="LightGray" BorderThickness="1" x:Name="GroupTree" Grid.Row="1" Grid.Column="0" Margin="10 5 10 5" ItemsSource="{Binding Groups}" >
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Students}">
-                    <TextBlock Text="{Binding Name}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconFontAwesome Kind="UsersSolid" Margin="0 0 3 0" />
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
                     <HierarchicalDataTemplate.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding ShortName}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconFontAwesome Kind="UserSolid" Margin="0 0 3 0" />
+                                <TextBlock Text="{Binding ShortName}"/>
+                            </StackPanel>
                         </DataTemplate>
                     </HierarchicalDataTemplate.ItemTemplate>
                 </HierarchicalDataTemplate>
@@ -38,7 +45,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </TreeView>
-        <TabControl Grid.Row="1" Grid.Column="1" Margin="10" x:Name="Tabs" >
+        <TabControl BorderBrush="LightGray" BorderThickness="1" Grid.Row="1" Grid.Column="1" Margin="1.5 5 10 5" x:Name="Tabs" >
             <TabControl.ItemContainerStyle>
                 <Style TargetType="{x:Type TabItem}">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -48,23 +55,44 @@
                 <TabItem.Content>
                     <DataGrid SelectedItem="{Binding SelectedStudent}" Grid.Row="1" Grid.Column="1" ItemsSource="{ Binding CurrentStudents }" AutoGenerateColumns="False" CanUserReorderColumns="false" IsReadOnly="true">
                         <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Фото" Width="55">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="photoStock.jpg" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Фамилия" Binding="{Binding Path=LastName}"/>
                             <DataGridTextColumn Header="Имя" Binding="{Binding Path=FirstName}"/>
                         </DataGrid.Columns>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding GridSelectedChanged}" CommandParameter="{Binding ElementName=GroupTree}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </DataGrid>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
-        <ToolBar VerticalAlignment="Stretch" Grid.ColumnSpan="2">
-            <Menu Width="auto">
-                <MenuItem Header="Администрирование">
-                    <MenuItem Header="Добавить группу" Command="{Binding NewGroupClicked}" CommandParameter="{Binding ElementName=GroupTree}"></MenuItem>
+        <StackPanel Margin="10 0 10 0" Orientation="Horizontal" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
+            <Menu Width="auto" Height="30" VerticalAlignment="Bottom">
+                <MenuItem Padding="-1 5 5 5" Header="Администрирование">
+                    <MenuItem.Icon >
+                        <iconPacks:FontAwesome Kind="ToolsSolid"/>
+                    </MenuItem.Icon>
+                    <MenuItem Padding="-1 5 5 5" Header="Добавить группу" Command="{Binding NewGroupClicked}" CommandParameter="{Binding ElementName=GroupTree}"></MenuItem>
+                </MenuItem>
+                <MenuItem Padding="-1 5 5 5" Margin="11 0 0 0" Header="Добавить студента" Command="{Binding AddCommand}">
+                    <MenuItem.Icon >
+                        <iconPacks:FontAwesome Kind="UserPlusSolid"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Padding="-1 5 5 5" Header="Удалить студента" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedStudent}">
+                    <MenuItem.Icon >
+                        <iconPacks:FontAwesome Kind="UserMinusSolid"/>
+                    </MenuItem.Icon>
                 </MenuItem>
             </Menu>
-        </ToolBar>
-        <DockPanel Grid.Row="2" LastChildFill="false">
-            <Button DockPanel.Dock="Top"  Command="{Binding AddCommand}" >+</Button>
-            <Button DockPanel.Dock="Bottom" Command="{Binding RemoveCommand}" CommandParameter="{Binding SelectedStudent}">-</Button>
-        </DockPanel>
+        </StackPanel>
     </Grid>
 </Page>

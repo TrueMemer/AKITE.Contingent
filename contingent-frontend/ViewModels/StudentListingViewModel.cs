@@ -1,15 +1,21 @@
 ﻿using contingent_frontend.Helpers;
 using contingent_frontend.Models;
+using MahApps.Metro;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace contingent_frontend.ViewModels
 {
-    class StudentListingViewModel : BaseViewModel
+    class StudentListingViewModel : BaseBindable
     {
         private BindingList<GroupNode> groups;
         public BindingList<GroupNode> Groups
@@ -62,9 +68,21 @@ namespace contingent_frontend.ViewModels
             get
             {
                 return addCommand ??
-                    (addCommand = new RelayCommand(obj =>
+                    (addCommand = new RelayCommand(async obj =>
                     {
-                        CurrentStudents.Add(new Student { FirstName = "Ivan", LastName = "Ivanov", MidName = "Ivanovich" });
+                        var s = new Student { FirstName = "Ivan", LastName = "Ivanov", MidName = "Ivanovich" };
+                        var result = await API.AddStudent(s);
+                        
+                        if (result == -1)
+                        {
+                            var window = Application.Current.MainWindow as MetroWindow;
+                            await window.ShowMessageAsync("Ошибка!", "Не удалось добавить студента", MessageDialogStyle.Affirmative);
+                            return;
+                        }
+
+                        s.ID = result;
+
+                        CurrentStudents.Add(s);
                     },
                     (obj) => SelectedGroup == null ? false : true
                     ));
@@ -77,10 +95,22 @@ namespace contingent_frontend.ViewModels
             get
             {
                 return removeCommand ??
-                    (removeCommand = new RelayCommand(obj =>
+                    (removeCommand = new RelayCommand(async obj =>
                     {
+                        var window = Application.Current.MainWindow as MetroWindow;
+                        var result = await window.ShowMessageAsync("Удаление студента", "Вы действительно хотите удалить студента?", 
+                            MessageDialogStyle.AffirmativeAndNegative,
+                            new MetroDialogSettings { AnimateHide = false, AnimateShow = false });
+
+                        if (result == MessageDialogResult.Negative) return;
+
                         var a = obj as Student;
-                        if (a != null) CurrentStudents.Remove(a);
+                        SelectedStudent = null;
+                        if (a != null)
+                        {
+                            API.DeleteStudentByID(a.ID);
+                            CurrentStudents.Remove(a);
+                        }
 
                     },
                     (obj) => SelectedGroup == null || SelectedGroup.Students.Count < 1 ? false : true
@@ -96,11 +126,10 @@ namespace contingent_frontend.ViewModels
                 return selectedStudentTreeChange ??
                     (selectedStudentTreeChange = new RelayCommand(obj =>
                     {
-                        dynamic a;
-                        if ((a = obj as Student) != null)
+                        if ((obj as Student) != null)
                         {
-                            SelectedStudent = a;
-                            SelectedGroup = Groups.Where(g => g.Students.Any(s => s == a)).SingleOrDefault();
+                            SelectedStudent = obj as Student;
+                            SelectedGroup = Groups.Where(g => g.Students.Any(s => s == obj as Student)).SingleOrDefault();
                         }
                         else
                         {
@@ -111,22 +140,65 @@ namespace contingent_frontend.ViewModels
             }
         }
 
+        private RelayCommand gridSelectedChanged;
+        public RelayCommand GridSelectedChanged
+        {
+            get
+            {
+                return gridSelectedChanged ??
+                    (gridSelectedChanged = new RelayCommand(obj =>
+                    {
+
+                    }));
+            }
+        }
+
         private RelayCommand newGroupClicked;
         public RelayCommand NewGroupClicked
         {
             get
             {
                 return newGroupClicked ??
-                    (newGroupClicked = new RelayCommand(obj =>
+                    (newGroupClicked = new RelayCommand(async obj =>
                     {
-                        Groups.Add(new GroupNode { Name = "Новая группа", Students = new BindingList<Student>() });
+                        var window = Application.Current.MainWindow as MetroWindow;
+                        var name = await window.ShowInputAsync("Создание новой группы", "Введите название новой группы", new MetroDialogSettings { AnimateHide=false, AnimateShow=false });
+
+                        if (name == String.Empty || name == null) return;
+
+                        Groups.Add(new GroupNode { Name = name, Students = new BindingList<Student>() });
                     }));
+            }
+        }
+
+        public async Task FetchGroups()
+        {
+            var nodes = await API.GetGroupNodesAsync();
+            if (nodes == null)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var window = Application.Current.MainWindow as MainWindow;
+                    (window.StatusBar.Items[0] as StatusBarItem).Content = "Не удалось получить список студентов!";
+                });
+                Groups = new BindingList<GroupNode>();
+                return;
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var window = Application.Current.MainWindow as MainWindow;
+                    int count = nodes.Count();
+                    (window.StatusBar.Items[0] as StatusBarItem).Content = $"Загружено {count.ToString()} групп";
+                });
+                Groups = new BindingList<GroupNode>(nodes);
             }
         }
 
         public StudentListingViewModel()
         {
-            Groups = new BindingList<GroupNode>(API.GetGroupNodes());
+            Task.Run(FetchGroups);
         }
     }
 }
