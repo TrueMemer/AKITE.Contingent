@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace contingent_frontend.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для Page1.xaml
-    /// </summary>
     public partial class StudentForm : Page
     {
         public StudentForm()
