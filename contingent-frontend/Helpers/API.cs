@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -13,6 +14,7 @@ namespace contingent_frontend.Helpers
 {
     static class API
     {
+        /*
         private static HttpClient http;
 
         static API()
@@ -23,6 +25,11 @@ namespace contingent_frontend.Helpers
 
         public static async Task<List<GroupNode>> GetGroupNodesAsync()
         {
+            if (ConfigurationManager.AppSettings["DemoMode"] == "1")
+            {
+                return new List<GroupNode>();
+            }
+
             string response;
 
             try
@@ -61,6 +68,11 @@ namespace contingent_frontend.Helpers
 
         public static async void DeleteStudentByID(int id)
         {
+            if (ConfigurationManager.AppSettings["DemoMode"] == "1")
+            {
+                return;
+            }
+
             HttpResponseMessage response;
             try
             {
@@ -74,6 +86,11 @@ namespace contingent_frontend.Helpers
 
         public static async Task<int> AddStudent(Student s)
         {
+            if (ConfigurationManager.AppSettings["DemoMode"] == "1")
+            {
+                return 1;
+            }
+
             var content = new StringContent(JsonConvert.SerializeObject(s), Encoding.UTF8, "application/json");
             var response = await http.PostAsync("/students/new", content);
 
@@ -82,5 +99,7 @@ namespace contingent_frontend.Helpers
             if (response.IsSuccessStatusCode) return int.Parse(JObject.Parse(await response.Content.ReadAsStringAsync())["data"]["id"].ToString());
             else return -1;
         }
+    }
+    */
     }
 }

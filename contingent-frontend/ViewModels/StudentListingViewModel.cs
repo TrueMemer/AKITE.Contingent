@@ -3,38 +3,33 @@ using contingent_frontend.Models;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Syncfusion.Data.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Media.Imaging;
 
 namespace contingent_frontend.ViewModels
 {
+
     class StudentListingViewModel : BaseBindable
     {
-        private BindingList<GroupNode> groups;
-        public BindingList<GroupNode> Groups
+        private BindingList<Student> students;
+        public BindingList<Student> Students
         {
-            get => groups;
+            get => students;
             set
             {
-                groups = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private BindingList<Student> currentStudents;
-        public BindingList<Student> CurrentStudents
-        {
-            get => currentStudents;
-            set
-            {
-                currentStudents = value;
+                students = value;
                 OnPropertyChanged();
             }
         }
@@ -50,17 +45,7 @@ namespace contingent_frontend.ViewModels
             }
         }
 
-        private GroupNode selectedGroup;
-        public GroupNode SelectedGroup
-        {
-            get => selectedGroup;
-            set
-            {
-                selectedGroup = value;
-                CurrentStudents = selectedGroup.Students;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<object> SelectedStudents { get; set; }
 
         private RelayCommand addCommand;
         public RelayCommand AddCommand
@@ -71,6 +56,8 @@ namespace contingent_frontend.ViewModels
                     (addCommand = new RelayCommand(async obj =>
                     {
                         var s = new Student { FirstName = "Ivan", LastName = "Ivanov", MidName = "Ivanovich" };
+                        s.Group = Group.Groups[0];
+                        /*
                         var result = await API.AddStudent(s);
                         
                         if (result == -1)
@@ -81,11 +68,10 @@ namespace contingent_frontend.ViewModels
                         }
 
                         s.ID = result;
+                        */
 
-                        CurrentStudents.Add(s);
-                    },
-                    (obj) => SelectedGroup == null ? false : true
-                    ));
+                        Students.Add(s);
+                    }));
             }
         }
 
@@ -98,107 +84,70 @@ namespace contingent_frontend.ViewModels
                     (removeCommand = new RelayCommand(async obj =>
                     {
                         var window = Application.Current.MainWindow as MetroWindow;
-                        var result = await window.ShowMessageAsync("Удаление студента", "Вы действительно хотите удалить студента?", 
+
+                        string deleteString;
+
+                        if (SelectedStudents.Count == 1)
+                        {
+                            deleteString = "Вы действительно хотите удалить студента?";
+                        }
+                        else
+                        {
+                            deleteString = $"Вы действительно хотите удалить студентов:\n";
+                            foreach (var _s in SelectedStudents)
+                            {
+                                var s = _s as Student;
+                                deleteString += $"- {s.ShortName}\n";
+                            }
+                        }
+
+                        var result = await window.ShowMessageAsync("Удаление студентов", deleteString, 
                             MessageDialogStyle.AffirmativeAndNegative,
                             new MetroDialogSettings { AnimateHide = false, AnimateShow = false });
 
                         if (result == MessageDialogResult.Negative) return;
 
-                        var a = obj as Student;
-                        SelectedStudent = null;
-                        if (a != null)
+                        foreach (var _s in SelectedStudents.ToList())
                         {
-                            API.DeleteStudentByID(a.ID);
-                            CurrentStudents.Remove(a);
+                            var s = _s as Student;
+                            if (s != null)
+                            {
+                                //API.DeleteStudentByID(a.ID);
+                                Students.Remove(s);
+                            }
                         }
 
                     },
-                    (obj) => SelectedGroup == null || SelectedGroup.Students.Count < 1 ? false : true
+                    (obj) => SelectedStudents.Count < 1 ? false : true
                     ));
-            }
-        }
-
-        private RelayCommand selectedStudentTreeChange;
-        public RelayCommand SelectedStudentTreeChange
-        {
-            get
-            {
-                return selectedStudentTreeChange ??
-                    (selectedStudentTreeChange = new RelayCommand(obj =>
-                    {
-                        if ((obj as Student) != null)
-                        {
-                            SelectedStudent = obj as Student;
-                            SelectedGroup = Groups.Where(g => g.Students.Any(s => s == obj as Student)).SingleOrDefault();
-                        }
-                        else
-                        {
-                            SelectedStudent = null;
-                            SelectedGroup = obj as GroupNode;
-                        }
-                    }));
-            }
-        }
-
-        private RelayCommand gridSelectedChanged;
-        public RelayCommand GridSelectedChanged
-        {
-            get
-            {
-                return gridSelectedChanged ??
-                    (gridSelectedChanged = new RelayCommand(obj =>
-                    {
-
-                    }));
-            }
-        }
-
-        private RelayCommand newGroupClicked;
-        public RelayCommand NewGroupClicked
-        {
-            get
-            {
-                return newGroupClicked ??
-                    (newGroupClicked = new RelayCommand(async obj =>
-                    {
-                        var window = Application.Current.MainWindow as MetroWindow;
-                        var name = await window.ShowInputAsync("Создание новой группы", "Введите название новой группы", new MetroDialogSettings { AnimateHide=false, AnimateShow=false });
-
-                        if (name == String.Empty || name == null) return;
-
-                        Groups.Add(new GroupNode { Name = name, Students = new BindingList<Student>() });
-                    }));
-            }
-        }
-
-        public async Task FetchGroups()
-        {
-            var nodes = await API.GetGroupNodesAsync();
-            if (nodes == null)
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    var window = Application.Current.MainWindow as MainWindow;
-                    (window.StatusBar.Items[0] as StatusBarItem).Content = "Не удалось получить список студентов!";
-                });
-                Groups = new BindingList<GroupNode>();
-                return;
-            }
-            else
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    var window = Application.Current.MainWindow as MainWindow;
-                    int count = nodes.Count();
-                    (window.StatusBar.Items[0] as StatusBarItem).Content = $"Загружено {count.ToString()} групп";
-                });
-                Groups = new BindingList<GroupNode>(nodes);
             }
         }
 
         public StudentListingViewModel()
         {
-            Task.Run(FetchGroups);
+            if (!(ConfigurationManager.AppSettings["DemoMode"] == "1"))
+            {
+                //Task.Run(FetchGroups);
+            }
+
+            SelectedStudents = new ObservableCollection<object>();
+
+            Group.Groups.Add(new Group { GroupID = 17, GroupNum = 1, Specialty = Specialty.Specialties[2] });
+            Group.Groups.Add(new Group { GroupID = 17, GroupNum = 2, Specialty = Specialty.Specialties[2] });
+            Group.Groups.Add(new Group { GroupID = 17, GroupNum = 3, Specialty = Specialty.Specialties[2] });
+            Group.Groups.Add(new Group { GroupID = 19, GroupNum = 1, Specialty = Specialty.Specialties[1] });
+            Group.Groups.Add(new Group { GroupID = 19, GroupNum = 2, Specialty = Specialty.Specialties[1] });
+
+            Students = new BindingList<Student>
+            {
+                new Student { CaseNum=1, Birthday=DateTime.Now, Group=Group.Groups[1], FirstName="Иван", LastName="Иванов", MidName="Иванович", AttNum="1", CertNum="1"},
+                new Student { CaseNum=2, Birthday=DateTime.Now, Group=Group.Groups[1], FirstName="Петр", LastName="Петров", MidName="Петрович", AttNum="2", CertNum="2"},
+                new Student { CaseNum=3, Birthday=DateTime.Now, Group=Group.Groups[2], FirstName="Сидоров", LastName="Никита", MidName="Федорович", AttNum="3", CertNum="3"},
+                new Student { CaseNum=4, Birthday=DateTime.Now, Group=Group.Groups[3], FirstName="Алиса", LastName="Рейх", MidName="Руслановна", AttNum="4", CertNum="4"},
+                new Student { CaseNum=5, Birthday=DateTime.Now, Group=Group.Groups[3], FirstName="Анастасия", LastName="Лис", MidName="Александровна", AttNum="5", CertNum="5"},
+                new Student { CaseNum=6, Birthday=DateTime.Now, Group=Group.Groups[4], FirstName="Александр", LastName="Пирогов", MidName="Викторович", AttNum="6", CertNum="6"},
+                new Student { CaseNum=7, Birthday=DateTime.Now, Group=Group.Groups[4], FirstName="Евгений", LastName="Титаренко", MidName="Андреевич", AttNum="7", CertNum="7"},
+            };
         }
     }
 }
