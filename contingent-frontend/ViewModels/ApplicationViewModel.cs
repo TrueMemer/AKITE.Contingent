@@ -74,6 +74,7 @@ namespace contingent_frontend
 
         private Page Dashboard;
         private Page StudentListing;
+        private Page StudentForm;
 
         private Page Settings;
         private Page About;
@@ -117,14 +118,14 @@ namespace contingent_frontend
         {
             Dashboard = new Dashboard();
             StudentListing = new StudentListing();
-
+            StudentForm = new StudentForm();
             Settings = new Settings();
             About = new About();
 
             AppMenu = new BindingList<MenuItem>();
             AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.TachometerAltSolid }, Text = "Статистика", NavigationDestination = Dashboard });
             AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.UserAltSolid }, Text = "Список студентов", NavigationDestination = StudentListing });
-
+            AppMenu.Add(new MenuItem { Text = "Форма студента", NavigationDestination = StudentForm });
             OptionsMenu = new BindingList<MenuItem>();
             OptionsMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.CogSolid }, Text = "Настройки", NavigationDestination = Settings });
             OptionsMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.InfoSolid }, Text = "О программе", NavigationDestination = About });

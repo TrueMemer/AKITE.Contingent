@@ -8,7 +8,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:contingent_frontend"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800" x:Name="MainView">
+        Title="MainWindow" Height="600" Width="1000" x:Name="MainView">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding WindowLoaded}"

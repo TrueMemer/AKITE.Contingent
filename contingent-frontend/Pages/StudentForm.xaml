@@ -1,0 +1,162 @@
+<Page x:Class="contingent_frontend.Pages.StudentForm"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:contingent_frontend.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="574" d:DesignWidth="926"
+      Title="StudentForm">
+
+    <Grid HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55"></RowDefinition>
+            <RowDefinition MaxHeight="500"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock FontSize="24" Grid.Row="0" Margin="0 14 0 0">Основное</TextBlock>
+        <TextBox FontSize="20" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="80" Margin="0 14 0 0"></TextBox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="620"></ColumnDefinition>
+                <ColumnDefinition MinWidth="270"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="90"></RowDefinition>
+                    <RowDefinition MaxHeight="35"></RowDefinition>
+                    <RowDefinition MaxHeight="57"></RowDefinition>
+                    <RowDefinition MaxHeight="130"></RowDefinition>
+                    <RowDefinition MaxHeight="185"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
+                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="100"></ColumnDefinition>
+                            <ColumnDefinition MinWidth="210"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock FontSize="20">Фамилия</TextBlock>
+                            <TextBlock FontSize="20">Имя</TextBlock>
+                            <TextBlock FontSize="20">Отчество</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0 0 14 0">
+                            <TextBox FontSize="14"></TextBox>
+                            <TextBox FontSize="14"></TextBox>
+                            <TextBox FontSize="14"></TextBox>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="158"></ColumnDefinition>
+                            <ColumnDefinition MinWidth="152"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock FontSize="20">Пол</TextBlock>
+                            <TextBlock FontSize="20">Дата рождения</TextBlock>
+                            <TextBlock FontSize="20">Льготы</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <ComboBox FontSize="14">
+                                <TextBlock FontSize="20">Мужской</TextBlock>
+                                <TextBlock FontSize="20">Женский</TextBlock>
+                            </ComboBox>
+                            <DatePicker FontSize="15"></DatePicker>
+                            <TextBox FontSize="14"></TextBox>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <TextBlock FontSize="24" Grid.Row="1">Паспортные данные</TextBlock>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
+                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="152"></ColumnDefinition>
+                            <ColumnDefinition MinWidth="158"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock FontSize="20">Вид документа</TextBlock>
+                            <TextBlock FontSize="20">Дата выдачи</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="0 0 14 0">
+                            <ComboBox FontSize="16">
+                                <TextBlock FontSize="20">Свидетельство о рождении</TextBlock>
+                                <TextBlock FontSize="20">Паспорт</TextBlock>
+                            </ComboBox>
+                            <DatePicker FontSize="16" SelectedDateFormat="Long"></DatePicker>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="152"></ColumnDefinition>
+                            <ColumnDefinition MinWidth="158"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock FontSize="20">Серия и номер</TextBlock>
+                            <TextBlock FontSize="20">документа</TextBlock>
+                        </StackPanel>
+                        <TextBox FontSize="16" Grid.Column="1" VerticalAlignment="Top"></TextBox>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="200"></ColumnDefinition>
+                        <ColumnDefinition MinWidth="420"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock FontSize="20">Кем выдан</TextBlock>
+                        <TextBlock FontSize="24" Margin="0 5 0 0">Образование</TextBlock>
+                        <TextBlock FontSize="20" Margin="0 5 0 0">Номер аттестата</TextBlock>
+                        <TextBlock FontSize="20">Номер приложения</TextBlock>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBox FontSize="15" Margin="-86 0 0 0" Height="Auto" VerticalAlignment="Top"></TextBox>
+                        <TextBox FontSize="15" Margin="0 40 0 0" HorizontalAlignment="Left" MinWidth="120"></TextBox>
+                        <TextBox FontSize="15" HorizontalAlignment="Left" MinWidth="120"></TextBox>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
+                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0 0 14 0">
+                        <TextBlock FontSize="24">Управление</TextBlock>
+                        <TextBlock FontSize="20">Специальность</TextBlock>
+                        <ComboBox FontSize="16">
+                            
+                        </ComboBox>
+                        <TextBlock FontSize="20">Группа</TextBlock>
+                        <ComboBox FontSize="16" Margin="0 0 0 14">
+                            
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock FontSize="24">Переводы</TextBlock>
+                        <ListBox FontSize="16">
+                            
+                        </ListBox>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <StackPanel Grid.Column="1">
+                <TextBlock FontSize="24" HorizontalAlignment="Left" Margin="68 0 0 0">Фотография</TextBlock>
+                <Border BorderBrush="LightGray" Width="210" Height="270" BorderThickness="1" HorizontalAlignment="Left" Margin="30 28 0 0">
+                    <Image Width="210" Height="270"></Image>
+                </Border>
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 28 0 0">
+                    <Button FontSize="20" Width="106">Обзор</Button>
+                    <Button FontSize="20" Width="106" Margin="32 0 0 0">Очистить</Button>
+                </StackPanel>
+            </StackPanel>
+            <Button FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 150 14" Grid.Column="1" Width="118">Отмена</Button>
+            <Button FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 0 14" Grid.Column="1" Width="118">Сохранить</Button>
+        </Grid>
+    </Grid>
+</Page>
