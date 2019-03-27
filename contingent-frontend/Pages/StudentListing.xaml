@@ -9,7 +9,7 @@
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:Syncfusion="http://schemas.syncfusion.com/wpf" x:Class="contingent_frontend.Pages.StudentListing"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="450" d:DesignWidth="2000"
       Title="StudentListing">
 
     <Grid>
@@ -18,7 +18,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <DockPanel Margin="10 0 10 0" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
             <Menu DockPanel.Dock="Left" Width="auto" Height="30" VerticalAlignment="Bottom">
@@ -29,7 +29,7 @@
             </Menu>
             <CheckBox Margin="10 0 0 0" x:Name="allowExtendedGrouping" DockPanel.Dock="Right">Расширенная группировка</CheckBox>
         </DockPanel>
-        <Syncfusion:SfDataGrid  Grid.Row="1"
+        <Syncfusion:SfDataGrid Grid.Row="1"
                                AllowGrouping="True" AutoExpandGroups="True"
                                ItemsSource="{Binding Students}" ShowColumnWhenGrouped="False"
                                AutoGenerateColumns="False" GroupCaptionTextFormat=" {Key}"
@@ -48,10 +48,19 @@
                 <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" FilterRowCondition="Contains" ImmediateUpdateColumnFilter="True" MappingName="LastName"  HeaderText="Фамилия" />
                 <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" FilterRowCondition="Contains" ImmediateUpdateColumnFilter="True" MappingName="MidName"   HeaderText="Отчество"/>
                 <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" FilterRowEditorType="Numeric" ImmediateUpdateColumnFilter="True" MappingName="CaseNum" HeaderText="Номер дела"/>
+                <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" ImmediateUpdateColumnFilter="True" MappingName="GenderName" HeaderText="Пол"/>
                 <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" ImmediateUpdateColumnFilter="True" MappingName="Birthday" HeaderText="Дата рождения"/>
+                <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" ImmediateUpdateColumnFilter="True" MappingName="StudyFormName" HeaderText="Форма обучения"/>
+                <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" ImmediateUpdateColumnFilter="True" MappingName="RegistrationAddress.City" HeaderText="Город проживания"/>
                 <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" ImmediateUpdateColumnFilter="True" MappingName="AttNum" HeaderText="Приложение №"/>
                 <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" ImmediateUpdateColumnFilter="True" MappingName="CertNum" HeaderText="Аттестат №"/>
+                <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" ImmediateUpdateColumnFilter="True" MappingName="AverageGrade" HeaderText="Средняя оценка аттестата"/>
             </Syncfusion:SfDataGrid.Columns>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="CellDoubleTapped">
+                    <i:InvokeCommandAction Command="{Binding OpenStudentCommand}"></i:InvokeCommandAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </Syncfusion:SfDataGrid>
     </Grid>
 </Page>

@@ -73,7 +73,7 @@ namespace contingent_frontend
         }
 
         private Page Dashboard;
-        private Page StudentListing;
+        public Page StudentListing;
 
         private Page Settings;
         private Page About;

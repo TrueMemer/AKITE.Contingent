@@ -1,4 +1,5 @@
-﻿using contingent_frontend.ViewModels;
+﻿using contingent_frontend.Helpers;
+using contingent_frontend.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,16 +24,6 @@ namespace contingent_frontend.Models
                 return $"{Code + " " ?? ""}{Name}";
             }
         }
-    
-
-        public static List<Specialty> Specialties = new List<Specialty>
-        {
-            new Specialty { Code=null, Name="Абитуриенты", ShortName="" },
-            new Specialty { Code="38.02.01", Name="Экономика и бухгалтерский учет", ShortName="БУ" },
-            new Specialty { Code="09.02.03", Name="Программирование в компьютерных системах", ShortName="ПКС" },
-            new Specialty { Code="38.02.04", Name="Коммерция (по отраслям)", ShortName="КПО" },
-            new Specialty { Code="11.02.01", Name="Радиоаппаратостроение", ShortName="РАС" }
-        };
     }
 
     public class Group
@@ -41,18 +32,13 @@ namespace contingent_frontend.Models
         public int? GroupID { get; set; }
         public Specialty Specialty { get; set; }
 
-        public static List<Group> Groups = new List<Group>
-        {
-            new Group { Specialty=Specialty.Specialties[0] }
-        };
-
         public string ShortName
         {
             get
             {
                 if (this.Specialty.Code == null)
                 {
-                    return Specialty.Specialties[0].Name;
+                    return Statics.Specialties[0].Name;
                 }
 
                 return $"{GroupNum}{this.Specialty.ShortName}-{GroupID}";
@@ -60,24 +46,38 @@ namespace contingent_frontend.Models
         }
     }
 
-    public class Student : BaseBindable
+    public class Passport
     {
+        public int? Type { get; set; }
+        public string Number { get; set; }
+        public string Place { get; set; }
+        public DateTime? Date { get; set; }
+    }
+
+    public class Address
+    {
+        public string Region { get; set; }
+        public string City { get; set; }
+        public string Street { get; set; }
+        public string House { get; set; }
+        public string FlatNum { get; set; }
+    }
+
+    public class Student : BaseBindable, ICloneable
+    {
+        public Student()
+        {
+            Passport = new Passport();
+            RegistrationAddress = new Address();
+            facticalAddress = new Address();
+        }
+
         [JsonProperty("id")]
         public int ID { get; set; }
         [JsonProperty("firstname")]
         public string FirstName { get; set; }
-
-        private string lastName;
         [JsonProperty("lastname")]
-        public string LastName
-        {
-            get => lastName;
-            set
-            {
-                lastName = value;
-                OnPropertyChanged();
-            }
-        }
+        public string LastName { get; set; }
         [JsonProperty("midname")]
         public string MidName   { get; set; }
         [JsonProperty("birthday")]
@@ -88,18 +88,75 @@ namespace contingent_frontend.Models
         public string CertNum { get; set; }
         [JsonProperty("att_num")]
         public string AttNum { get; set; }
-        [JsonProperty("languages")]
-        public string Languages { get; set; }
+        [JsonProperty("language")]
+        public string Language { get; set; }
         [JsonProperty("gender")]
         public int? Gender { get; set; }
         [JsonProperty("creation_date")]
         public DateTime CreationDate { get; set; }
 
+        public Passport Passport { get; set; }
+
+        private bool addressesIdentical;
+        public bool AddressesIdentical
+        {
+            get => addressesIdentical;
+            set
+            {
+                addressesIdentical = value;
+                OnPropertyChanged();
+                OnPropertyChanged("FacticalAddress");
+            }
+        }
+
+        public string GenderName => Gender.HasValue ? Statics.Genders[Gender.Value] : "";
+
+        private Address facticalAddress;
+        public Address FacticalAddress
+        {
+            get
+            {
+                if (AddressesIdentical) return RegistrationAddress;
+                else return facticalAddress;
+            }
+            set
+            {
+                if (!AddressesIdentical) facticalAddress = value;
+            }
+        }
+        public Address RegistrationAddress { get; set; }
+
         public int? CaseNum { get; set; }
 
-        public Group Group { get; set; }
-        public Specialty Specialty { get; set; }
+        public int? StudyForm { get; set; }
+        public string StudyFormName => StudyForm.HasValue ? Statics.StudyForms[StudyForm.Value] : "";
+
+        public int? Degree { get; set; }
+
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+
+        public float? AverageGrade { get; set; }
+
+        private int groupIndex;
+        public int GroupIndex
+        {
+            get => groupIndex;
+            set
+            {
+                groupIndex = value;
+                OnPropertyChanged();
+                OnPropertyChanged("Group");
+            }
+        }
+
+        public Group Group => Statics.Groups[GroupIndex];
 
         public string ShortName => $"{LastName} {FirstName[0]}. {MidName[0]}.";
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

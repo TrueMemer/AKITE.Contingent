@@ -2,161 +2,195 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:local="clr-namespace:contingent_frontend.Pages"
+      xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
+      xmlns:helpers="clr-namespace:contingent_frontend.Helpers"
       mc:Ignorable="d" 
-      d:DesignHeight="574" d:DesignWidth="926"
+      d:DesignHeight="800" d:DesignWidth="926"
       Title="StudentForm">
 
-    <Grid HorizontalAlignment="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="55"></RowDefinition>
-            <RowDefinition MaxHeight="500"></RowDefinition>
-        </Grid.RowDefinitions>
-        <TextBlock FontSize="24" Grid.Row="0" Margin="0 14 0 0">Основное</TextBlock>
-        <TextBox FontSize="20" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="80" Margin="0 14 0 0"></TextBox>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="620"></ColumnDefinition>
-                <ColumnDefinition MinWidth="270"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
+    <Page.Resources>
+        <Style BasedOn="{StaticResource MetroTextBox}" TargetType="{x:Type TextBox}">
+            <Setter Property="Metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style BasedOn="{StaticResource MetroComboBox}" TargetType="{x:Type ComboBox}">
+            <Setter Property="Metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style BasedOn="{StaticResource MetroDatePicker}" TargetType="{x:Type DatePicker}">
+            <Setter Property="Metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <helpers:InverseBooleanConverter  x:Key="InvertBooleanConverter"/>
+    </Page.Resources>
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="90"></RowDefinition>
-                    <RowDefinition MaxHeight="35"></RowDefinition>
-                    <RowDefinition MaxHeight="57"></RowDefinition>
-                    <RowDefinition MaxHeight="130"></RowDefinition>
-                    <RowDefinition MaxHeight="185"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition MinWidth="100"></ColumnDefinition>
-                            <ColumnDefinition MinWidth="210"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <TextBlock FontSize="20">Фамилия</TextBlock>
-                            <TextBlock FontSize="20">Имя</TextBlock>
-                            <TextBlock FontSize="20">Отчество</TextBlock>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0 0 14 0">
-                            <TextBox Text="{Binding Path=SelectedStudent.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="14"></TextBox>
-                            <TextBox Text="{Binding Path=SelectedStudent.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="14"></TextBox>
-                            <TextBox Text="{Binding Path=SelectedStudent.MidName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="14"></TextBox>
-                        </StackPanel>
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition MinWidth="158"></ColumnDefinition>
-                            <ColumnDefinition MinWidth="152"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <TextBlock FontSize="20">Пол</TextBlock>
-                            <TextBlock FontSize="20">Дата рождения</TextBlock>
-                            <TextBlock FontSize="20">Льготы</TextBlock>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1">
-                            <ComboBox FontSize="14">
-                                <TextBlock FontSize="20">Мужской</TextBlock>
-                                <TextBlock FontSize="20">Женский</TextBlock>
-                            </ComboBox>
-                            <DatePicker SelectedDate="{Binding Path=SelectedStudent.Birthday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="15"></DatePicker>
-                            <TextBox FontSize="14"></TextBox>
-                        </StackPanel>
-                    </Grid>
-                </Grid>
-                <TextBlock FontSize="24" Grid.Row="1">Паспортные данные</TextBlock>
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition MinWidth="152"></ColumnDefinition>
-                            <ColumnDefinition MinWidth="158"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <TextBlock FontSize="20">Вид документа</TextBlock>
-                            <TextBlock FontSize="20">Дата выдачи</TextBlock>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Margin="0 0 14 0">
-                            <ComboBox FontSize="16">
-                                <TextBlock FontSize="20">Свидетельство о рождении</TextBlock>
-                                <TextBlock FontSize="20">Паспорт</TextBlock>
-                            </ComboBox>
-                            <DatePicker FontSize="16" SelectedDateFormat="Long"></DatePicker>
-                        </StackPanel>
-                    </Grid>
-                    <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition MinWidth="152"></ColumnDefinition>
-                            <ColumnDefinition MinWidth="158"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0">
-                            <TextBlock FontSize="20">Серия и номер</TextBlock>
-                            <TextBlock FontSize="20">документа</TextBlock>
-                        </StackPanel>
-                        <TextBox FontSize="16" Grid.Column="1" VerticalAlignment="Top"></TextBox>
-                    </Grid>
-                </Grid>
-                <Grid Grid.Row="3">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="200"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="420"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <TextBlock FontSize="20">Кем выдан</TextBlock>
-                        <TextBlock FontSize="24" Margin="0 5 0 0">Образование</TextBlock>
-                        <TextBlock FontSize="20" Margin="0 5 0 0">Номер аттестата</TextBlock>
-                        <TextBlock FontSize="20">Номер приложения</TextBlock>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <TextBox FontSize="15" Margin="-86 0 0 0" Height="Auto" VerticalAlignment="Top"></TextBox>
-                        <TextBox Text="{Binding Path=SelectedStudent.CertNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="15" Margin="0 40 0 0" HorizontalAlignment="Left" MinWidth="120"></TextBox>
-                        <TextBox Text="{Binding Path=SelectedStudent.AttNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="15" HorizontalAlignment="Left" MinWidth="120"></TextBox>
-                    </StackPanel>
-                </Grid>
-                <Grid Grid.Row="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
-                        <ColumnDefinition MinWidth="310"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Margin="0 0 14 0">
-                        <TextBlock FontSize="24">Управление</TextBlock>
-                        <TextBlock FontSize="20">Специальность</TextBlock>
-                        <ComboBox FontSize="16">
-                            
-                        </ComboBox>
-                        <TextBlock FontSize="20">Группа</TextBlock>
-                        <ComboBox FontSize="16" Margin="0 0 0 14">
-                            
-                        </ComboBox>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <TextBlock FontSize="24">Переводы</TextBlock>
-                        <ListBox FontSize="16">
-                            
-                        </ListBox>
-                    </StackPanel>
-                </Grid>
-            </Grid>
-            <StackPanel Grid.Column="1">
-                <TextBlock FontSize="24" HorizontalAlignment="Left" Margin="68 0 0 0">Фотография</TextBlock>
-                <Border BorderBrush="LightGray" Width="210" Height="270" BorderThickness="1" HorizontalAlignment="Left" Margin="30 28 0 0">
-                    <Image Width="210" Height="270"></Image>
-                </Border>
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 28 0 0">
-                    <Button FontSize="20" Width="106">Обзор</Button>
-                    <Button FontSize="20" Width="106" Margin="32 0 0 0">Очистить</Button>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Expander IsExpanded="True" Header="Основные данные">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0 0 5 0">
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Фамилия" Text="{Binding Path=EditedStudent.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Имя" Text="{Binding Path=EditedStudent.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Отчество" Text="{Binding Path=EditedStudent.MidName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                            </StackPanel>
+                            <StackPanel Margin="0 0 5 0" Grid.Row="0" Grid.Column="1">
+                                <ComboBox MinHeight="+27" Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Пол" SelectedIndex="{Binding Path=EditedStudent.Gender}" ItemsSource="{Binding Source={x:Static helpers:Statics.Genders}}" />
+                                <DatePicker Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Дата рождения" SelectedDate="{Binding Path=EditedStudent.Birthday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></DatePicker>
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Номер дела" Text="{Binding Path=EditedStudent.CaseNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                            </StackPanel>
+                            <GroupBox Margin="0 1 5 0"  Header="Адрес регистрации" Grid.Row="1" Grid.Column="0">
+                                <StackPanel>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.Region, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Район/Область"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.City, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Город/Поселок"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.Street, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Улица/Микрорайон"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.House, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Дом"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.FlatNum, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Квартира (если уместно)"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Margin="0 1 5 0" IsEnabled="{Binding ElementName=identicalAddress, Mode=OneWay, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}" Header="Адрес проживания" Grid.Row="1" Grid.Column="1">
+                                <StackPanel>
+                                    <StackPanel>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.Region, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Район/Область"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.City, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Город/Поселок"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.Street, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Улица/Микрорайон"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.House, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Дом"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.FlatNum, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Квартира (если уместно)"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <CheckBox x:Name="identicalAddress" IsChecked="{Binding Path=EditedStudent.AddressesIdentical, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 5 0 5" Grid.Row="2" FontSize="16" HorizontalAlignment="Center" Grid.ColumnSpan="2" Content="Адрес проживания идентичен адресу регистрации" />
+                        </Grid>
+                    </Expander>
+                    <Expander IsExpanded="True" Header="Паспортные данные">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition ></ColumnDefinition>
+                                <ColumnDefinition ></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="1" Margin="0 0 5 0">
+                                    <ComboBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Тип документа" Metro:TextBoxHelper.ClearTextButton="True"  SelectedIndex="{Binding Path=EditedStudent.Passport.Type, TargetNullValue=-1}" ItemsSource="{Binding Source={x:Static helpers:Statics.PassportTypes}}" />
+                                    <DatePicker Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Дата выдачи"  SelectedDate="{Binding Path=EditedStudent.Passport.Date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  SelectedDateFormat="Long"></DatePicker>
+                                    <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Кем выдан"  Text="{Binding Path=EditedStudent.Passport.Place, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Серия и номер"  Text="{Binding Path=EditedStudent.Passport.Number, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                            </Grid>
+                        </Grid>
+                    </Expander>
+                    <Expander IsExpanded="True" Header="Обучение">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition ></ColumnDefinition>
+                                <ColumnDefinition ></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0 0 5 0">
+                                <ComboBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Специальность"  IsEnabled="False" SelectedItem="{Binding Path=EditedStudent.Group.Specialty, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={x:Static helpers:Statics.Specialties}}" >
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding FullName}"></TextBlock>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <ComboBox IsEnabled="False" Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Группа"  SelectedIndex="{Binding Path=EditedStudent.GroupIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={x:Static helpers:Statics.Groups}}" >
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ShortName}"></TextBlock>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <ComboBox Margin="0 1 0 0" Metro:TextBoxHelper.ClearTextButton="True" Metro:TextBoxHelper.Watermark="Форма обучения"  SelectedIndex="{Binding Path=EditedStudent.StudyForm, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={x:Static helpers:Statics.StudyForms}}" />
+                            </StackPanel>
+                        </Grid>
+                    </Expander>
+                    <Expander IsExpanded="False" Header="Образование">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0 0 5 0">
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Номер аттестата"  Text="{Binding Path=EditedStudent.CertNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Номер приложения к аттестату"  Text="{Binding Path=EditedStudent.AttNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <ComboBox Height="auto" Margin="0 1 0 0" SelectedIndex="{Binding Path=EditedStudent.Degree}" ItemsSource="{Binding Source={x:Static helpers:Statics.Degrees}}" Metro:TextBoxHelper.ClearTextButton="True" Metro:TextBoxHelper.Watermark="Степень образования"/>
+                                <TextBox Height="auto" Margin="0 1 0 0" Text="{Binding Path=EditedStudent.AverageGrade}" Metro:TextBoxHelper.Watermark="Средний балл аттестата"/>
+                            </StackPanel>
+                        </Grid>
+                    </Expander>
+                    <Expander IsExpanded="False" Header="Родители">
+                        <TextBlock Text="Скоро..." FontSize="24" HorizontalAlignment="Center"></TextBlock>
+                    </Expander>
+                    <Expander IsExpanded="False" Header="Дополнительная информация" Grid.Row="3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0 0 5 0">
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Номер телефона"  Text="{Binding Path=EditedStudent.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Электронная почта"  Text="{Binding Path=EditedStudent.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Иностранный язык"  Text="{Binding Path=EditedStudent.Language, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                            </StackPanel>
+                        </Grid>
+                    </Expander>
                 </StackPanel>
-            </StackPanel>
-            <Button FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 150 14" Grid.Column="1" Width="118">Отмена</Button>
-            <Button FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 0 14" Grid.Column="1" Width="118">Сохранить</Button>
-        </Grid>
+                <GroupBox Grid.Column="1" HorizontalContentAlignment="Center" Header="Фотография">
+                    <DockPanel LastChildFill="False">
+                        <Border Margin="0 15 0 0" DockPanel.Dock="Top" BorderBrush="LightGray" Width="130" Height="190" BorderThickness="1" HorizontalAlignment="Center">
+                            <Image/>
+                        </Border>
+                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 10 0 0">
+                            <Button Margin="0 0 10 0" >O</Button>
+                            <Button >X</Button>
+                        </StackPanel>
+                        <Grid HorizontalAlignment="Center" DockPanel.Dock="Bottom" Margin="0 10 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition MinWidth="90" Width="auto" />
+                                <ColumnDefinition MinWidth="90" Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button  Margin="0 0 5 0" Grid.Column="0" Command="{Binding CancelCommand}">Отмена</Button>
+                            <Button  Grid.Column="1" Command="{Binding SaveCommand}">Сохранить</Button>
+                        </Grid>
+                    </DockPanel>
+                </GroupBox>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Page>

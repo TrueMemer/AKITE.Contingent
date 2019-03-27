@@ -110,7 +110,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\API.cs" />
+    <Compile Include="Helpers\InvertBooleanConverter.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
+    <Compile Include="Helpers\Statics.cs" />
     <Compile Include="Pages\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
