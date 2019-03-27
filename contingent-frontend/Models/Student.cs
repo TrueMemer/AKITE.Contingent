@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using contingent_frontend.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -59,14 +60,24 @@ namespace contingent_frontend.Models
         }
     }
 
-    public class Student
+    public class Student : BaseBindable
     {
         [JsonProperty("id")]
         public int ID { get; set; }
         [JsonProperty("firstname")]
         public string FirstName { get; set; }
+
+        private string lastName;
         [JsonProperty("lastname")]
-        public string LastName  { get; set; }
+        public string LastName
+        {
+            get => lastName;
+            set
+            {
+                lastName = value;
+                OnPropertyChanged();
+            }
+        }
         [JsonProperty("midname")]
         public string MidName   { get; set; }
         [JsonProperty("birthday")]

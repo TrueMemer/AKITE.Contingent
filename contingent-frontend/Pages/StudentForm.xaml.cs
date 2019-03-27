@@ -1,5 +1,8 @@
-﻿using System;
+﻿using contingent_frontend.Models;
+using contingent_frontend.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,9 +20,11 @@ namespace contingent_frontend.Pages
 {
     public partial class StudentForm : Page
     {
-        public StudentForm()
+        public StudentForm(BindingList<Student> Students, Student SelectedStudent)
         {
             InitializeComponent();
+
+            DataContext = new StudentFormViewModel(Students, SelectedStudent);
         }
     }
 }

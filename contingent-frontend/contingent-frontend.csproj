@@ -124,6 +124,7 @@
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\StudentFormViewModel.cs" />
     <Compile Include="ViewModels\StudentListingViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

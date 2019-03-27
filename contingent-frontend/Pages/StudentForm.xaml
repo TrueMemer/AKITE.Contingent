@@ -44,9 +44,9 @@
                             <TextBlock FontSize="20">Отчество</TextBlock>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="0 0 14 0">
-                            <TextBox FontSize="14"></TextBox>
-                            <TextBox FontSize="14"></TextBox>
-                            <TextBox FontSize="14"></TextBox>
+                            <TextBox Text="{Binding Path=SelectedStudent.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="14"></TextBox>
+                            <TextBox Text="{Binding Path=SelectedStudent.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="14"></TextBox>
+                            <TextBox Text="{Binding Path=SelectedStudent.MidName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="14"></TextBox>
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Column="1">
@@ -64,7 +64,7 @@
                                 <TextBlock FontSize="20">Мужской</TextBlock>
                                 <TextBlock FontSize="20">Женский</TextBlock>
                             </ComboBox>
-                            <DatePicker FontSize="15"></DatePicker>
+                            <DatePicker SelectedDate="{Binding Path=SelectedStudent.Birthday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="15"></DatePicker>
                             <TextBox FontSize="14"></TextBox>
                         </StackPanel>
                     </Grid>
@@ -117,8 +117,8 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1">
                         <TextBox FontSize="15" Margin="-86 0 0 0" Height="Auto" VerticalAlignment="Top"></TextBox>
-                        <TextBox FontSize="15" Margin="0 40 0 0" HorizontalAlignment="Left" MinWidth="120"></TextBox>
-                        <TextBox FontSize="15" HorizontalAlignment="Left" MinWidth="120"></TextBox>
+                        <TextBox Text="{Binding Path=SelectedStudent.CertNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="15" Margin="0 40 0 0" HorizontalAlignment="Left" MinWidth="120"></TextBox>
+                        <TextBox Text="{Binding Path=SelectedStudent.AttNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="15" HorizontalAlignment="Left" MinWidth="120"></TextBox>
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="4">

@@ -1,5 +1,6 @@
 ﻿using contingent_frontend.Helpers;
 using contingent_frontend.Models;
+using contingent_frontend.Pages;
 using MahApps.Metro;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -20,9 +21,10 @@ using System.Windows.Media.Imaging;
 
 namespace contingent_frontend.ViewModels
 {
-
     class StudentListingViewModel : BaseBindable
     {
+        public Page StudentForm;
+
         private BindingList<Student> students;
         public BindingList<Student> Students
         {
@@ -53,24 +55,14 @@ namespace contingent_frontend.ViewModels
             get
             {
                 return addCommand ??
-                    (addCommand = new RelayCommand(async obj =>
+                    (addCommand = new RelayCommand(obj =>
                     {
-                        var s = new Student { FirstName = "Ivan", LastName = "Ivanov", MidName = "Ivanovich" };
-                        s.Group = Group.Groups[0];
-                        /*
-                        var result = await API.AddStudent(s);
-                        
-                        if (result == -1)
-                        {
-                            var window = Application.Current.MainWindow as MetroWindow;
-                            await window.ShowMessageAsync("Ошибка!", "Не удалось добавить студента", MessageDialogStyle.Affirmative);
-                            return;
-                        }
+                        var window = Application.Current.MainWindow as MainWindow;
 
-                        s.ID = result;
-                        */
+                        StudentForm = new StudentForm(Students, null);
 
-                        Students.Add(s);
+                        var ctx = window.DataContext as ApplicationViewModel;
+                        ctx.CurrentPage = StudentForm;
                     }));
             }
         }
