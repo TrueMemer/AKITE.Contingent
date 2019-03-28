@@ -9,6 +9,7 @@
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:Syncfusion="http://schemas.syncfusion.com/wpf" x:Class="contingent_frontend.Pages.StudentListing"
       mc:Ignorable="d" 
+      xmlns:helpers="clr-namespace:contingent_frontend.Helpers"
       d:DesignHeight="450" d:DesignWidth="2000"
       Title="StudentListing">
 
@@ -31,18 +32,18 @@
         </DockPanel>
         <Syncfusion:SfDataGrid Grid.Row="1"
                                AllowGrouping="True" AutoExpandGroups="True"
-                               ItemsSource="{Binding Students}" ShowColumnWhenGrouped="False"
+                               ItemsSource="{Binding Source={x:Static helpers:Statics.Students}}" ShowColumnWhenGrouped="False"
                                AutoGenerateColumns="False" GroupCaptionTextFormat=" {Key}"
                                SelectionUnit="Row" NavigationMode="Row" SelectionMode="Extended"
                                SelectedItems="{Binding SelectedStudents}" FilterRowPosition="FixedTop" 
                                ShowGroupDropArea="{Binding Source={x:Reference allowExtendedGrouping}, Path=IsChecked, Mode=TwoWay}"
                                GroupDropAreaText="Перетащите сюда заголовки столбцов" AllowResizingColumns="True">
             <Syncfusion:SfDataGrid.GroupColumnDescriptions>
-                <Syncfusion:GroupColumnDescription ColumnName="Group.Specialty.FullName" x:Name="Специальность"/>
+                <Syncfusion:GroupColumnDescription ColumnName="Specialty.FullName" x:Name="Специальность"/>
             </Syncfusion:SfDataGrid.GroupColumnDescriptions>
 
             <Syncfusion:SfDataGrid.Columns>
-                <Syncfusion:GridTextColumn FilterRowEditorType="MultiSelectComboBox" ImmediateUpdateColumnFilter="True" IsHidden="True" MappingName="Group.Specialty.FullName" HeaderText="Специальность"/>
+                <Syncfusion:GridTextColumn FilterRowEditorType="MultiSelectComboBox" ImmediateUpdateColumnFilter="True" IsHidden="True" MappingName="Specialty.FullName" HeaderText="Специальность"/>
                 <Syncfusion:GridTextColumn FilterRowEditorType="MultiSelectComboBox" ImmediateUpdateColumnFilter="True" MappingName="Group.ShortName" HeaderText="Группа"/>
                 <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" FilterRowCondition="Contains" ImmediateUpdateColumnFilter="True" MappingName="FirstName" HeaderText="Имя" />
                 <Syncfusion:GridTextColumn FilterRowOptionsVisibility="Collapsed" FilterRowCondition="Contains" ImmediateUpdateColumnFilter="True" MappingName="LastName"  HeaderText="Фамилия" />

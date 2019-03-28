@@ -74,6 +74,7 @@ namespace contingent_frontend
 
         private Page Dashboard;
         public Page StudentListing;
+        private Page TransferManager;
 
         private Page Settings;
         private Page About;
@@ -119,10 +120,12 @@ namespace contingent_frontend
             StudentListing = new StudentListing();
             Settings = new Settings();
             About = new About();
+            TransferManager = new TransferManager();
 
             AppMenu = new BindingList<MenuItem>();
             AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.TachometerAltSolid }, Text = "Статистика", NavigationDestination = Dashboard });
             AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.UserAltSolid }, Text = "Список студентов", NavigationDestination = StudentListing });
+            AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.UsersSolid }, Text = "Менеджер переводов", NavigationDestination = TransferManager });
             OptionsMenu = new BindingList<MenuItem>();
             OptionsMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.CogSolid }, Text = "Настройки", NavigationDestination = Settings });
             OptionsMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.InfoSolid }, Text = "О программе", NavigationDestination = About });

@@ -25,17 +25,6 @@ namespace contingent_frontend.ViewModels
     {
         public Page StudentForm;
 
-        private BindingList<Student> students;
-        public BindingList<Student> Students
-        {
-            get => students;
-            set
-            {
-                students = value;
-                OnPropertyChanged();
-            }
-        }
-
         public ObservableCollection<object> SelectedStudents { get; set; }
 
         private RelayCommand addCommand;
@@ -48,7 +37,7 @@ namespace contingent_frontend.ViewModels
                     {
                         var window = Application.Current.MainWindow as MainWindow;
 
-                        StudentForm = new StudentForm(Students, null);
+                        StudentForm = new StudentForm(Statics.Students, null);
 
                         var ctx = window.DataContext as ApplicationViewModel;
                         ctx.CurrentPage = StudentForm;
@@ -94,7 +83,7 @@ namespace contingent_frontend.ViewModels
                             if (s != null)
                             {
                                 //API.DeleteStudentByID(a.ID);
-                                Students.Remove(s);
+                                Statics.Students.Remove(s);
                             }
                         }
 
@@ -111,7 +100,7 @@ namespace contingent_frontend.ViewModels
                         if (SelectedStudents.Count > 1 || SelectedStudents.Count == 0) return;
                         var window = Application.Current.MainWindow as MainWindow;
 
-                        StudentForm = new StudentForm(Students, SelectedStudents[0] as Student);
+                        StudentForm = new StudentForm(Statics.Students, SelectedStudents[0] as Student);
 
                         var ctx = window.DataContext as ApplicationViewModel;
                         ctx.CurrentPage = StudentForm;
@@ -126,22 +115,21 @@ namespace contingent_frontend.ViewModels
 
             SelectedStudents = new ObservableCollection<object>();
 
-            Statics.Groups.Add(new Group { GroupID = 17, GroupNum = 1, Specialty = Statics.Specialties[2] });
-            Statics.Groups.Add(new Group { GroupID = 17, GroupNum = 2, Specialty = Statics.Specialties[2] });
-            Statics.Groups.Add(new Group { GroupID = 17, GroupNum = 3, Specialty = Statics.Specialties[2] });
-            Statics.Groups.Add(new Group { GroupID = 19, GroupNum = 1, Specialty = Statics.Specialties[1] });
-            Statics.Groups.Add(new Group { GroupID = 19, GroupNum = 2, Specialty = Statics.Specialties[1] });
+            Statics.Specialties[0].Groups.Add(new Group { Specialty = Statics.Specialties[0] });
+            Statics.Specialties[2].Groups.Add(new Group { GroupID = 17, GroupNum = 1, Specialty = Statics.Specialties[2] });
+            Statics.Specialties[2].Groups.Add(new Group { GroupID = 17, GroupNum = 2, Specialty = Statics.Specialties[2] });
+            Statics.Specialties[2].Groups.Add(new Group { GroupID = 17, GroupNum = 3, Specialty = Statics.Specialties[2] });
+            Statics.Specialties[1].Groups.Add(new Group { GroupID = 19, GroupNum = 1, Specialty = Statics.Specialties[1] });
+            Statics.Specialties[1].Groups.Add(new Group { GroupID = 19, GroupNum = 2, Specialty = Statics.Specialties[1] });
 
-            Students = new BindingList<Student>
-            {
-                new Student { CaseNum=1, Birthday=DateTime.Now, GroupIndex=1, Gender=0, FirstName="Иван", LastName="Иванов", MidName="Иванович", AttNum="1", CertNum="1"},
-                new Student { CaseNum=2, Birthday=DateTime.Now, GroupIndex=1, Gender=0, FirstName="Петр", LastName="Петров", MidName="Петрович", AttNum="2", CertNum="2"},
-                new Student { CaseNum=3, Birthday=DateTime.Now, GroupIndex=2, Gender=0, FirstName="Сидоров", LastName="Никита", MidName="Федорович", AttNum="3", CertNum="3"},
-                new Student { CaseNum=4, Birthday=DateTime.Now, GroupIndex=3, Gender=1, FirstName="Алиса", LastName="Рейх", MidName="Руслановна", AttNum="4", CertNum="4"},
-                new Student { CaseNum=5, Birthday=DateTime.Now, GroupIndex=3, Gender=1, FirstName="Анастасия", LastName="Лис", MidName="Александровна", AttNum="5", CertNum="5"},
-                new Student { CaseNum=6, Birthday=DateTime.Now, GroupIndex=4, Gender=0, FirstName="Александр", LastName="Пирогов", MidName="Викторович", AttNum="6", CertNum="6"},
-                new Student { CaseNum=7, Birthday=DateTime.Now, GroupIndex=4, Gender=0, FirstName="Евгений", LastName="Титаренко", MidName="Андреевич", AttNum="7", CertNum="7"},
-            };
+
+            Statics.Students.Add(new Student { CaseNum = 1, Birthday = DateTime.Now, GroupIndex = 0, SpecialtyIndex = 2, Gender = 0, FirstName = "Иван", LastName = "Иванов", MidName = "Иванович", AttNum = "1", CertNum = "1" });
+            Statics.Students.Add(new Student { CaseNum = 2, Birthday = DateTime.Now, GroupIndex = 0, SpecialtyIndex = 2, Gender = 0, FirstName = "Петр", LastName = "Петров", MidName = "Петрович", AttNum = "2", CertNum = "2" });
+            Statics.Students.Add(new Student { CaseNum = 3, Birthday = DateTime.Now, GroupIndex = 1, SpecialtyIndex = 2, Gender = 0, FirstName = "Сидоров", LastName = "Никита", MidName = "Федорович", AttNum = "3", CertNum = "3" });
+            Statics.Students.Add(new Student { CaseNum = 4, Birthday = DateTime.Now, GroupIndex = 2, SpecialtyIndex = 2, Gender = 1, FirstName = "Алиса", LastName = "Рейх", MidName = "Руслановна", AttNum = "4", CertNum = "4" });
+            Statics.Students.Add(new Student { CaseNum = 5, Birthday = DateTime.Now, GroupIndex = 2, SpecialtyIndex = 2, Gender = 1, FirstName = "Анастасия", LastName = "Лис", MidName = "Александровна", AttNum = "5", CertNum = "5" });
+            Statics.Students.Add(new Student { CaseNum = 6, Birthday = DateTime.Now, GroupIndex = 0, SpecialtyIndex = 1, Gender = 0, FirstName = "Александр", LastName = "Пирогов", MidName = "Викторович", AttNum = "6", CertNum = "6" });
+            Statics.Students.Add(new Student { CaseNum = 7, Birthday = DateTime.Now, GroupIndex = 0, SpecialtyIndex = 1, Gender = 0, FirstName = "Евгений", LastName = "Титаренко", MidName = "Андреевич", AttNum = "7", CertNum = "7" });
         }
     }
 }

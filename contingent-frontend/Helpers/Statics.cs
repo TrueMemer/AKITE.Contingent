@@ -1,8 +1,10 @@
 ﻿using contingent_frontend.Models;
+using contingent_frontend.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,16 +14,11 @@ namespace contingent_frontend.Helpers
     {
         public static BindingList<Specialty> Specialties = new BindingList<Specialty>
         {
-            new Specialty { Code=null, Name="Абитуриенты", ShortName="" },
-            new Specialty { Code="38.02.01", Name="Экономика и бухгалтерский учет", ShortName="БУ" },
-            new Specialty { Code="09.02.03", Name="Программирование в компьютерных системах", ShortName="ПКС" },
-            new Specialty { Code="38.02.04", Name="Коммерция (по отраслям)", ShortName="КПО" },
-            new Specialty { Code="11.02.01", Name="Радиоаппаратостроение", ShortName="РАС" }
-        };
-
-        public static List<Group> Groups = new List<Group>
-        {
-            new Group { Specialty=Statics.Specialties[0] }
+            new Specialty { Code=null, Name="Абитуриенты", ShortName="", Groups=new BindingList<Group>() },
+            new Specialty { Code="38.02.01", Name="Экономика и бухгалтерский учет", ShortName="БУ", Groups=new BindingList<Group>() },
+            new Specialty { Code="09.02.03", Name="Программирование в компьютерных системах", ShortName="ПКС", Groups=new BindingList<Group>() },
+            new Specialty { Code="38.02.04", Name="Коммерция (по отраслям)", ShortName="КПО", Groups=new BindingList<Group>() },
+            new Specialty { Code="11.02.01", Name="Радиоаппаратостроение", ShortName="РАС", Groups=new BindingList<Group>() }
         };
 
         public static List<string> Genders = new List<string>
@@ -43,5 +40,7 @@ namespace contingent_frontend.Helpers
         {
             "Средняя общая", "Средняя профессиональная", "Высшая"
         };
+
+        public static BindingList<Student> Students = new BindingList<Student>();
     }
 }

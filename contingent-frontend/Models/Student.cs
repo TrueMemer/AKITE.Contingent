@@ -14,6 +14,11 @@ namespace contingent_frontend.Models
 
     public class Specialty
     {
+        public Specialty()
+        {
+            Groups = new BindingList<Group>();
+        }
+
         public string Code { get; set; }
         public string Name { get; set; }
         public string ShortName { get; set; }
@@ -24,6 +29,7 @@ namespace contingent_frontend.Models
                 return $"{Code + " " ?? ""}{Name}";
             }
         }
+        public BindingList<Group> Groups { get; set; }
     }
 
     public class Group
@@ -138,7 +144,7 @@ namespace contingent_frontend.Models
 
         public float? AverageGrade { get; set; }
 
-        private int groupIndex;
+        private int groupIndex = 0;
         public int GroupIndex
         {
             get => groupIndex;
@@ -150,7 +156,20 @@ namespace contingent_frontend.Models
             }
         }
 
-        public Group Group => Statics.Groups[GroupIndex];
+        private int specialtyIndex = 0;
+        public int SpecialtyIndex
+        {
+            get => specialtyIndex;
+            set
+            {
+                specialtyIndex = value;
+                OnPropertyChanged();
+                OnPropertyChanged("Specialty");
+            }
+        }
+
+        public Specialty Specialty => Statics.Specialties[SpecialtyIndex];
+        public Group Group => Statics.Specialties[SpecialtyIndex].Groups[GroupIndex];
 
         public string ShortName => $"{LastName} {FirstName[0]}. {MidName[0]}.";
 
