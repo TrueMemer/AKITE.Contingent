@@ -2,7 +2,6 @@
 using contingent_frontend.Models;
 using contingent_frontend.Pages;
 using contingent_frontend.ViewModels;
-using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -77,6 +76,7 @@ namespace contingent_frontend
 
         private Page Settings;
         private Page About;
+        private Page GroupManager;
 
         private RelayCommand windowLoaded;
         public RelayCommand WindowLoaded
@@ -112,17 +112,18 @@ namespace contingent_frontend
             }
         }
 
-
         public ApplicationViewModel()
         {
             Dashboard = new Dashboard();
             StudentListing = new StudentListing();
             Settings = new Settings();
             About = new About();
+            GroupManager = new GroupManager();
 
             AppMenu = new BindingList<MenuItem>();
             AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.TachometerAltSolid }, Text = "Статистика", NavigationDestination = Dashboard });
             AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.UserAltSolid }, Text = "Список студентов", NavigationDestination = StudentListing });
+            AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome {}, Text = "Группы", NavigationDestination = GroupManager });
             OptionsMenu = new BindingList<MenuItem>();
             OptionsMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.CogSolid }, Text = "Настройки", NavigationDestination = Settings });
             OptionsMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.InfoSolid }, Text = "О программе", NavigationDestination = About });
