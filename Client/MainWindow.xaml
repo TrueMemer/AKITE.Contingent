@@ -1,0 +1,67 @@
+﻿<Controls:MetroWindow x:Class="AKITE.Contingent.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:local="clr-namespace:AKITE.Contingent.Client"
+        mc:Ignorable="d"
+        Title="АКИТЭ.Контингент" Height="600" Width="1000" x:Name="MainView">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}"
+                                   CommandParameter="{Binding ElementName=MainView}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Grid.Resources>
+            <DataTemplate x:Key="MenuItemTemplate"
+                          DataType="{x:Type MenuItem}">
+                <Grid Height="48">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ContentControl Grid.Column="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Focusable="False"
+                                    Content="{Binding Icon}" />
+                    <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Text="{Binding Text}" />
+                </Grid>
+            </DataTemplate>
+
+        </Grid.Resources>
+
+        <Controls:HamburgerMenu IsPaneOpen="False" DisplayMode="CompactInline" 
+                                ItemsSource="{Binding AppMenu}" OptionsItemsSource="{Binding OptionsMenu}" OptionsItemTemplate="{StaticResource MenuItemTemplate}" ItemTemplate="{StaticResource MenuItemTemplate}" 
+                                x:Name="HambMenu" Grid.Row="0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="ItemInvoked">
+                    <i:InvokeCommandAction Command="{Binding HambItemClicked}" CommandParameter="{Binding SelectedItem, ElementName=HambMenu}"></i:InvokeCommandAction>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="ItemInvoked">
+                    <i:InvokeCommandAction Command="{Binding HambItemClicked}" CommandParameter="{Binding SelectedOptionsItem, ElementName=HambMenu}"></i:InvokeCommandAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Controls:HamburgerMenu.Content>
+                <Frame Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden" Opacity="1"></Frame>
+            </Controls:HamburgerMenu.Content>
+        </Controls:HamburgerMenu>
+
+        <StatusBar x:Name="StatusBar" Grid.Row="1">
+            <StatusBarItem>Вы вошли как: Демо-юзер</StatusBarItem>
+        </StatusBar>
+    </Grid>
+
+</Controls:MetroWindow>
