@@ -19,7 +19,7 @@ namespace contingent_frontend.Helpers
             new Specialty { Code="11.02.01", Name="Радиоаппаратостроение", ShortName="РАС" }
         };
 
-        public static List<Group> Groups = new List<Group>
+        public static BindingList<Group> Groups = new BindingList<Group>
         {
             new Group { Specialty=Statics.Specialties[0] }
         };
