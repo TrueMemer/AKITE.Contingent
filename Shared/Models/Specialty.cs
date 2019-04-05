@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AKITE.Contingent.Client.Models
+namespace AKITE.Contingent.Models
 {
     public class Specialty
     {

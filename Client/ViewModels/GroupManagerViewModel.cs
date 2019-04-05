@@ -1,6 +1,5 @@
 ﻿using AKITE.Contingent.Client.Dialogs;
 using AKITE.Contingent.Client.Utilities;
-using AKITE.Contingent.Client.Models;
 using AKITE.Contingent.Client.Services;
 using MahApps.Metro.Controls.Dialogs;
 using System;
@@ -11,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using AKITE.Contingent.Helpers;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.ViewModels
 {
@@ -46,7 +47,7 @@ namespace AKITE.Contingent.Client.ViewModels
             {
                 selectedSpecialty = value;
                 OnPropertyChanged();
-                SelectedGroups = GroupDataService.GetGroups().Where(g => g.SpecialtyID == SelectedSpecialty + 1);
+                SelectedGroups = GroupDataService.GetGroups().Where(g => g.SpecialtyId == SelectedSpecialty + 1);
             }
         }
 
@@ -56,7 +57,7 @@ namespace AKITE.Contingent.Client.ViewModels
                 var dialog = new NewGroup();
                 dialog.SubmitButton.Click += async (object s, RoutedEventArgs e) =>
                 {
-                    GroupDataService.AddGroup(new Group { GroupID = int.Parse(dialog.Num), GroupNum = int.Parse(dialog.ID), SpecialtyID = SelectedSpecialty + 1 });
+                    GroupDataService.AddGroup(new Group { GroupID = int.Parse(dialog.Num), GroupNum = int.Parse(dialog.ID), SpecialtyId = SelectedSpecialty + 1 });
                     SelectedSpecialty += 0;
                     await dialogCoordinator.HideMetroDialogAsync(this, dialog);
                 };

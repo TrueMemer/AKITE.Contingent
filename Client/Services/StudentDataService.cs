@@ -1,57 +1,119 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using AKITE.Contingent.Client.Models;
+using System.Windows;
+using AKITE.Contingent.Helpers;
+using AKITE.Contingent.Models;
+using Newtonsoft.Json;
 
 namespace AKITE.Contingent.Client.Services
 {
-    public static class StudentDataService
+    public class StudentDataService : BaseBindable
     {
-        private static BindingList<Student> _students;
+        private readonly HttpClient Http;
 
-        static StudentDataService()
+        private BindingList<Student> _students;
+        public BindingList<Student> Students
         {
-            _students = new BindingList<Student>
+            get => _students;
+            set
             {
-                new Student { CaseNum=1, Birthday=DateTime.Now, GroupIndex=1, Gender=0, FirstName="Иван", LastName="Иванов", MidName="Иванович", AttNum="1", CertNum="1"},
-                new Student { CaseNum=2, Birthday=DateTime.Now, GroupIndex=1, Gender=0, FirstName="Петр", LastName="Петров", MidName="Петрович", AttNum="2", CertNum="2"},
-                new Student { CaseNum=3, Birthday=DateTime.Now, GroupIndex=2, Gender=0, FirstName="Сидоров", LastName="Никита", MidName="Федорович", AttNum="3", CertNum="3"},
-                new Student { CaseNum=4, Birthday=DateTime.Now, GroupIndex=3, Gender=1, FirstName="Алиса", LastName="Рейх", MidName="Руслановна", AttNum="4", CertNum="4"},
-                new Student { CaseNum=5, Birthday=DateTime.Now, GroupIndex=3, Gender=1, FirstName="Анастасия", LastName="Лис", MidName="Александровна", AttNum="5", CertNum="5"},
-                new Student { CaseNum=6, Birthday=DateTime.Now, GroupIndex=4, Gender=0, FirstName="Александр", LastName="Пирогов", MidName="Викторович", AttNum="6", CertNum="6"},
-                new Student { CaseNum=7, Birthday=DateTime.Now, GroupIndex=4, Gender=0, FirstName="Евгений", LastName="Титаренко", MidName="Андреевич", AttNum="7", CertNum="7"},
+                _students = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public StudentDataService()
+        {
+            Http = new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:44378/")
             };
+            Http.DefaultRequestHeaders.Accept.Clear();
+            Http.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
 
-            _students.ListChanged += ListChanged;
+            Students = new BindingList<Student>();
         }
 
-        private static void ListChanged(object s, ListChangedEventArgs e)
+        public async Task AddStudent(Student student)
         {
-            //_students = new BindingList<Student>(_students.OrderBy(st => st.GroupIndex).ToList());
+            try
+            {
+                var request = await Http.PostAsJsonAsync("api/students", student);
+
+                if (!request.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Не удалось добавить студента (сервер недоступен?)!");
+                    Debug.WriteLine(await request.Content.ReadAsStreamAsync());
+                    return;
+                }
+
+                Students.Add(await request.Content.ReadAsAsync<Student>());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
-        public static void AddStudent(Student student)
+        public async Task DeleteStudent(Student student)
         {
-            if (student != null)
-                _students.Add(student);
+            var request = await Http.DeleteAsync($"api/students/{student.Id}");
+
+            if (!request.IsSuccessStatusCode)
+            {
+                MessageBox.Show("Не удалось удалить студента (возможно десинхронизация)!");
+                return;
+            }
+
+            Students.Remove(student);
         }
 
-        public static void DeleteStudent(Student student)
+        public async Task UpdateStudent(int id, Student student)
         {
-            _students.Remove(student);
+            var request = await Http.PutAsJsonAsync($"api/students/{id}", student);
+
+            if (!request.IsSuccessStatusCode)
+            {
+                MessageBox.Show("Не удалось обновить студента (сервер недоступен?)!");
+                Debug.WriteLine(request.StatusCode);
+                Debug.WriteLine(await request.Content.ReadAsStreamAsync());
+                return;
+            }
+
+            var old = Students.SingleOrDefault(s => s.Id == id);
+            old = await request.Content.ReadAsAsync<Student>();
         }
 
-        public static void UpdateStudent(int old, Student new_)
+        public IEnumerable<Student> GetStudents()
         {
-            _students[old] = new_.Clone() as Student;
+            return Students;
         }
 
-        public static IEnumerable<Student> GetStudents()
+        public async Task RefreshStudents()
         {
-            return _students;
+            try
+            {
+                var request = await Http.GetAsync("api/students");
+
+                var response = await request.Content.ReadAsAsync<BindingList<Student>>();
+
+                Students = response;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.StackTrace);
+                throw;
+            }
         }
     }
 }

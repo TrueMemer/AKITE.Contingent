@@ -1,5 +1,4 @@
-﻿using AKITE.Contingent.Client.Models;
-using AKITE.Contingent.Client.ViewModels;
+﻿using AKITE.Contingent.Client.ViewModels;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;

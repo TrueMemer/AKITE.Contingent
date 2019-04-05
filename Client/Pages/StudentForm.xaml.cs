@@ -1,5 +1,4 @@
-﻿using AKITE.Contingent.Client.Models;
-using AKITE.Contingent.Client.ViewModels;
+﻿using AKITE.Contingent.Client.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,16 +14,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AKITE.Contingent.Client.Services;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Pages
 {
     public partial class StudentForm : Page
     {
-        public StudentForm(Student SelectedStudent)
+        public StudentForm(Student SelectedStudent, StudentDataService studentDataService)
         {
             InitializeComponent();
 
-            DataContext = new StudentFormViewModel(SelectedStudent);
+            DataContext = new StudentFormViewModel(SelectedStudent, studentDataService);
         }
     }
 }

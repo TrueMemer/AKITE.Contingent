@@ -1,5 +1,4 @@
-﻿using AKITE.Contingent.Client.Models;
-using AKITE.Contingent.Client.Services;
+﻿using AKITE.Contingent.Client.Services;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Dialogs
 {

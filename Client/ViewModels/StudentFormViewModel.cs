@@ -1,5 +1,4 @@
-﻿using AKITE.Contingent.Client.Models;
-using AKITE.Contingent.Client.Services;
+﻿using AKITE.Contingent.Client.Services;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Syncfusion.Data.Extensions;
@@ -12,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using AKITE.Contingent.Helpers;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.ViewModels
 {
@@ -44,15 +45,15 @@ namespace AKITE.Contingent.Client.ViewModels
                 result = await mwindow.ShowMessageAsync("Подтвердите изменения", "Вы действительно хотите подтвердить изменения?", MessageDialogStyle.AffirmativeAndNegative);
                 if (result == MessageDialogResult.Negative) return;
 
-                var index = StudentDataService.GetStudents().IndexOf(SelectedStudent);
-                StudentDataService.UpdateStudent(index, EditedStudent);
+                var index = _studentDataService.GetStudents().IndexOf(SelectedStudent);
+                await _studentDataService.UpdateStudent(index, EditedStudent);
             }
             else
             {
                 result = await mwindow.ShowMessageAsync("Подтвердите добавление", "Вы действительно хотите добавить нового студента?", MessageDialogStyle.AffirmativeAndNegative);
                 if (result == MessageDialogResult.Negative) return;
 
-                StudentDataService.AddStudent(EditedStudent);
+                await _studentDataService.AddStudent(EditedStudent);
             }
             var vm = Application.Current.MainWindow.DataContext as ApplicationViewModel;
 
@@ -73,8 +74,12 @@ namespace AKITE.Contingent.Client.ViewModels
         }
         #endregion
 
-        public StudentFormViewModel(Student SelectedStudent)
+        private readonly StudentDataService _studentDataService;
+
+        public StudentFormViewModel(Student SelectedStudent, StudentDataService studentDataService)
         {
+            _studentDataService = studentDataService;
+
             SaveCommand = new RelayCommand(SaveStudent);
             CancelCommand = new RelayCommand(Cancel);
 

@@ -1,20 +1,20 @@
-﻿using AKITE.Contingent.Client.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Services
 {
     public static class SpecialtyDataService
     {
-        private static BindingList<Specialty> _specialties;
+        private static readonly BindingList<Specialty> Specialties;
 
         static SpecialtyDataService()
         {
-            _specialties = new BindingList<Specialty>
+            Specialties = new BindingList<Specialty>
             {
                 new Specialty { Code=null, Name="Абитуриенты", ShortName="" },
                 new Specialty { Code="38.02.01", Name="Экономика и бухгалтерский учет", ShortName="БУ" },
@@ -27,12 +27,12 @@ namespace AKITE.Contingent.Client.Services
         public static void AddSpecialty(Specialty specialty)
         {
             if (specialty != null)
-                _specialties.Add(specialty);
+                Specialties.Add(specialty);
         }
 
         public static IEnumerable<Specialty> GetSpecialties()
         {
-            return _specialties;
+            return Specialties;
         }
     }
 }

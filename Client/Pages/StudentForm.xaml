@@ -7,7 +7,7 @@
       xmlns:local="clr-namespace:AKITE.Contingent.Client.Pages"
       xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
       xmlns:Utils="clr-namespace:AKITE.Contingent.Client.Utilities"
-      xmlns:Models="clr-namespace:AKITE.Contingent.Client.Models"      
+      xmlns:Models="clr-namespace:AKITE.Contingent.Models"      
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="926"
       Title="StudentForm">

@@ -1,19 +1,15 @@
-﻿using AKITE.Contingent.Client.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AKITE.Contingent.Client.Services;
 
-namespace AKITE.Contingent.Client.Models
+namespace AKITE.Contingent.Models
 {
-    public class Group
+    public partial class Group
     {
-        public int? GroupNum { get; set; }
-        public int? GroupID { get; set; }
-        public int SpecialtyID { get; set; }
-        public Specialty Specialty => SpecialtyDataService.GetSpecialties().ElementAt(SpecialtyID);
-        public string ShortName => $"{GroupNum}{SpecialtyDataService.GetSpecialties().ElementAt(SpecialtyID).ShortName}-{GroupID}";
-        public int StudentCount => StudentDataService.GetStudents().Count(s => s.Group == this);
+        public Specialty Specialty => SpecialtyDataService.GetSpecialties().ElementAt(SpecialtyId);
+        public string ShortName => $"{GroupNum}{SpecialtyDataService.GetSpecialties().ElementAt(SpecialtyId).ShortName}-{GroupID}";
     }
 }

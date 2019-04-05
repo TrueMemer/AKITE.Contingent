@@ -1,5 +1,4 @@
-﻿using AKITE.Contingent.Client.Models;
-using AKITE.Contingent.Client.Services;
+﻿using AKITE.Contingent.Client.Services;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Dialogs
 {
@@ -23,7 +23,7 @@ namespace AKITE.Contingent.Client.Dialogs
     /// </summary>
     public partial class FastTransferDialog : CustomDialog
     {
-        private Student student;
+        public Student Student;
 
         public IEnumerable<Group> Groups => GroupDataService.GetGroups();
 
@@ -31,7 +31,7 @@ namespace AKITE.Contingent.Client.Dialogs
 
         public FastTransferDialog(Student student)
         {
-            this.student = student;
+            this.Student = student;
             InitializeComponent();
 
             DataContext = this;
@@ -43,7 +43,7 @@ namespace AKITE.Contingent.Client.Dialogs
         public RelayCommand TransferStudent => transferStudent ??
             (transferStudent = new RelayCommand(obj =>
             {
-                this.student.GroupIndex = SelectedGroupIndex;
+                this.Student.GroupIndex = SelectedGroupIndex;
             }));
     }
 }

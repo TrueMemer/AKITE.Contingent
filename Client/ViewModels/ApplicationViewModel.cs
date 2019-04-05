@@ -1,5 +1,4 @@
 ﻿using AKITE.Contingent.Client.Utilities;
-using AKITE.Contingent.Client.Models;
 using AKITE.Contingent.Client.Pages;
 using AKITE.Contingent.Client.ViewModels;
 using System;
@@ -15,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Interactivity;
 using MahApps.Metro.IconPacks;
 using AKITE.Contingent.Client.Services;
+using AKITE.Contingent.Helpers;
 
 namespace AKITE.Contingent.Client.ViewModels
 {
@@ -108,13 +108,17 @@ namespace AKITE.Contingent.Client.ViewModels
         public BindingList<MenuItem> AppMenu { get; set; }
         public BindingList<MenuItem> OptionsMenu { get; set; }
 
+        public StudentDataService StudentDataService { get; set; }
+
         public ApplicationViewModel()
         {
+            StudentDataService = new StudentDataService();
+
             WindowLoaded = new RelayCommand(OnWindowLoaded);
             HambItemClicked = new RelayCommand(OnHambItemClicked);
 
             Dashboard = new Dashboard();
-            StudentListing = new StudentListing();
+            StudentListing = new StudentListing(StudentDataService);
             Settings = new Settings();
             About = new About();
             GroupManager = new GroupManager();

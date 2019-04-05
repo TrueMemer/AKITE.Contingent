@@ -1,5 +1,4 @@
 ﻿using AKITE.Contingent.Client.Utilities;
-using AKITE.Contingent.Client.Models;
 using AKITE.Contingent.Client.Pages;
 using AKITE.Contingent.Client.Services;
 using MahApps.Metro;
@@ -21,6 +20,8 @@ using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using AKITE.Contingent.Client.Dialogs;
+using AKITE.Contingent.Helpers;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.ViewModels
 {
@@ -28,10 +29,18 @@ namespace AKITE.Contingent.Client.ViewModels
     {
         private Page StudentForm;
 
-        public IEnumerable<Student> Students => StudentDataService.GetStudents();
         public ObservableCollection<object> SelectedStudents { get; set; }
 
-        private IDialogCoordinator _dialogCoordinator;
+        private bool loadingStudents;
+        public bool LoadingStudents
+        {
+            get => loadingStudents;
+            set
+            {
+                loadingStudents = value;
+                OnPropertyChanged();
+            }
+        }
 
         #region Команды
         public ICommand FastTransferStudent { get; private set; }
@@ -46,6 +55,7 @@ namespace AKITE.Contingent.Client.ViewModels
 
             dialog.TransferButton.Click += async (object s, RoutedEventArgs e) =>
             {
+                await StudentDataService.UpdateStudent(dialog.Student.Id, dialog.Student);
                 await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
             };
 
@@ -58,7 +68,7 @@ namespace AKITE.Contingent.Client.ViewModels
             if (SelectedStudents.Count > 1 || SelectedStudents.Count == 0) return;
             var window = Application.Current.MainWindow as MainWindow;
 
-            StudentForm = new StudentForm(SelectedStudents[0] as Student);
+            StudentForm = new StudentForm(SelectedStudents[0] as Student, StudentDataService);
 
             var ctx = window.DataContext as ApplicationViewModel;
             ctx.CurrentPage = StudentForm;
@@ -69,7 +79,7 @@ namespace AKITE.Contingent.Client.ViewModels
         {
             var window = Application.Current.MainWindow as MainWindow;
 
-            StudentForm = new StudentForm(null);
+            StudentForm = new StudentForm(null, StudentDataService);
 
             var ctx = window.DataContext as ApplicationViewModel;
             ctx.CurrentPage = StudentForm;
@@ -107,16 +117,30 @@ namespace AKITE.Contingent.Client.ViewModels
                 var s = _s as Student;
                 if (s != null)
                 {
-                    StudentDataService.DeleteStudent(s);
+                    await StudentDataService.DeleteStudent(s);
                 }
             }
 
         }
+
+        public ICommand OnLoadedCommand { get; set; }
+
+        // FIXME: Пофиксить утечку памяти
+        private async void Loaded(object s)
+        {
+            LoadingStudents = true;
+            await StudentDataService.RefreshStudents();
+            LoadingStudents = false;
+        }
         #endregion
 
-        public StudentListingViewModel(IDialogCoordinator dialogCoordinator)
+        public StudentDataService StudentDataService { get; set; }
+        private IDialogCoordinator _dialogCoordinator;
+
+        public StudentListingViewModel(IDialogCoordinator dialogCoordinator, StudentDataService studentDataService)
         {
             _dialogCoordinator = dialogCoordinator;
+            StudentDataService = studentDataService;
 
             SelectedStudents = new ObservableCollection<object>();
 
@@ -124,6 +148,7 @@ namespace AKITE.Contingent.Client.ViewModels
             OpenStudentCommand = new RelayCommand(OpenStudentForm);
             RemoveStudentCommand = new RelayCommand(RemoveStudent, (obj) => SelectedStudents.Count > 0);
             AddStudentCommand = new RelayCommand(AddStudentForm);
+            OnLoadedCommand = new RelayCommand(Loaded);
         }
     }
 }
