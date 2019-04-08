@@ -1,11 +1,6 @@
-﻿using AKITE.Contingent.Client.ViewModels;
-using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,20 +11,21 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using AKITE.Contingent.Client.ViewModels;
+using MahApps.Metro.Controls;
 
-namespace AKITE.Contingent.Client
+namespace AKITE.Contingent.Client.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для Splash.xaml
     /// </summary>
-    ///
-
-    public partial class MainWindow : MetroWindow
+    public partial class Splash : MetroWindow
     {
-        public MainWindow()
+        public Splash()
         {
+            DataContext = new SplashViewModel();
+
             InitializeComponent();
-            DataContext = new ApplicationViewModel();
         }
     }
 }

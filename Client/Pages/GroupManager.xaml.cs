@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AKITE.Contingent.Client.Utilities;
 
 namespace AKITE.Contingent.Client.Pages
 {
@@ -22,10 +23,10 @@ namespace AKITE.Contingent.Client.Pages
     /// </summary>
     public partial class GroupManager : Page
     {
-        public GroupManager()
+        public GroupManager(DataCoordinator dataCoordinator)
         {
             InitializeComponent();
-            DataContext = new GroupManagerViewModel(DialogCoordinator.Instance);
+            DataContext = new GroupManagerViewModel(DialogCoordinator.Instance, dataCoordinator);
         }
     }
 }

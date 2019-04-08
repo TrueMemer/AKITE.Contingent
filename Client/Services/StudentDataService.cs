@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using AKITE.Contingent.Helpers;
 using AKITE.Contingent.Models;
-using Newtonsoft.Json;
 
 namespace AKITE.Contingent.Client.Services
 {
     public class StudentDataService : BaseBindable
     {
-        private readonly HttpClient Http;
+        private readonly HttpClient _http;
 
         private BindingList<Student> _students;
         public BindingList<Student> Students
@@ -32,12 +28,12 @@ namespace AKITE.Contingent.Client.Services
 
         public StudentDataService()
         {
-            Http = new HttpClient
+            _http = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:44378/")
+                BaseAddress = new Uri("https://localhost:5001/")
             };
-            Http.DefaultRequestHeaders.Accept.Clear();
-            Http.DefaultRequestHeaders.Accept.Add(
+            _http.DefaultRequestHeaders.Accept.Clear();
+            _http.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
             Students = new BindingList<Student>();
@@ -45,29 +41,21 @@ namespace AKITE.Contingent.Client.Services
 
         public async Task AddStudent(Student student)
         {
-            try
-            {
-                var request = await Http.PostAsJsonAsync("api/students", student);
+            var request = await _http.PostAsJsonAsync("api/students", student);
 
-                if (!request.IsSuccessStatusCode)
-                {
-                    MessageBox.Show("Не удалось добавить студента (сервер недоступен?)!");
-                    Debug.WriteLine(await request.Content.ReadAsStreamAsync());
-                    return;
-                }
-
-                Students.Add(await request.Content.ReadAsAsync<Student>());
-            }
-            catch (Exception e)
+            if (!request.IsSuccessStatusCode)
             {
-                Console.WriteLine(e);
-                throw;
+                MessageBox.Show("Не удалось добавить студента (сервер недоступен?)!");
+                Debug.WriteLine(await request.Content.ReadAsStreamAsync());
+                return;
             }
+
+            Students.Add(await request.Content.ReadAsAsync<Student>());
         }
 
         public async Task DeleteStudent(Student student)
         {
-            var request = await Http.DeleteAsync($"api/students/{student.Id}");
+            var request = await _http.DeleteAsync($"api/students/{student.Id}");
 
             if (!request.IsSuccessStatusCode)
             {
@@ -80,13 +68,13 @@ namespace AKITE.Contingent.Client.Services
 
         public async Task UpdateStudent(int id, Student student)
         {
-            var request = await Http.PutAsJsonAsync($"api/students/{id}", student);
+            var request = await _http.PutAsJsonAsync($"api/students/{id}", student);
 
             if (!request.IsSuccessStatusCode)
             {
                 MessageBox.Show("Не удалось обновить студента (сервер недоступен?)!");
                 Debug.WriteLine(request.StatusCode);
-                Debug.WriteLine(await request.Content.ReadAsStreamAsync());
+                Debug.WriteLine(await request.Content.ReadAsStringAsync());
                 return;
             }
 
@@ -94,26 +82,20 @@ namespace AKITE.Contingent.Client.Services
             old = await request.Content.ReadAsAsync<Student>();
         }
 
-        public IEnumerable<Student> GetStudents()
-        {
-            return Students;
-        }
-
         public async Task RefreshStudents()
         {
-            try
-            {
-                var request = await Http.GetAsync("api/students");
+            var request = await _http.GetAsync("api/students");
 
-                var response = await request.Content.ReadAsAsync<BindingList<Student>>();
-
-                Students = response;
-            }
-            catch (Exception e)
+            if (!request.IsSuccessStatusCode)
             {
-                MessageBox.Show(e.StackTrace);
-                throw;
+                Debug.WriteLine(request.StatusCode);
+                Debug.WriteLine(await request.Content.ReadAsStringAsync());
+                throw new System.Exception("Не удалось получить студентов! (возможно сервер недоступен)");
             }
+
+            var response = await request.Content.ReadAsAsync<BindingList<Student>>();
+
+            Students = response;
         }
     }
 }

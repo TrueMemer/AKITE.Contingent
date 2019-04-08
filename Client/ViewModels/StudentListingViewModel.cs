@@ -1,23 +1,10 @@
 ﻿using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Client.Pages;
 using AKITE.Contingent.Client.Services;
-using MahApps.Metro;
-using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using Syncfusion.Data.Extensions;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Configuration;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using AKITE.Contingent.Client.Dialogs;
 using AKITE.Contingent.Helpers;
@@ -25,19 +12,19 @@ using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.ViewModels
 {
-    class StudentListingViewModel : BaseBindable
+    public class StudentListingViewModel : BaseBindable
     {
-        private Page StudentForm;
+        private Page _studentForm;
 
         public ObservableCollection<object> SelectedStudents { get; set; }
 
-        private bool loadingStudents;
+        private bool _loadingStudents;
         public bool LoadingStudents
         {
-            get => loadingStudents;
+            get => _loadingStudents;
             set
             {
-                loadingStudents = value;
+                _loadingStudents = value;
                 OnPropertyChanged();
             }
         }
@@ -46,14 +33,14 @@ namespace AKITE.Contingent.Client.ViewModels
         public ICommand FastTransferStudent { get; private set; }
         private async void FastTransfer(object obj)
         {
-            var dialog = new FastTransferDialog(SelectedStudents[0] as Student);
+            var dialog = new FastTransferDialog(SelectedStudents[0] as Student, _dataCoordinator);
 
-            dialog.CancelButton.Click += async (object s, RoutedEventArgs e) =>
+            dialog.CancelButton.Click += async (s, e) =>
             {
                 await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
             };
 
-            dialog.TransferButton.Click += async (object s, RoutedEventArgs e) =>
+            dialog.TransferButton.Click += async (s, e) =>
             {
                 await StudentDataService.UpdateStudent(dialog.Student.Id, dialog.Student);
                 await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
@@ -66,30 +53,22 @@ namespace AKITE.Contingent.Client.ViewModels
         private void OpenStudentForm(object obj)
         {
             if (SelectedStudents.Count > 1 || SelectedStudents.Count == 0) return;
-            var window = Application.Current.MainWindow as MainWindow;
+            _studentForm = new StudentForm(SelectedStudents[0] as Student, _dataCoordinator, _navigator, _dialogCoordinator);
 
-            StudentForm = new StudentForm(SelectedStudents[0] as Student, StudentDataService);
-
-            var ctx = window.DataContext as ApplicationViewModel;
-            ctx.CurrentPage = StudentForm;
+            _navigator.NavigateTo(_studentForm);
         }
 
         public ICommand AddStudentCommand { get; private set; }
         private void AddStudentForm(object obj)
         {
-            var window = Application.Current.MainWindow as MainWindow;
+            _studentForm = new StudentForm(null, _dataCoordinator, _navigator, _dialogCoordinator);
 
-            StudentForm = new StudentForm(null, StudentDataService);
-
-            var ctx = window.DataContext as ApplicationViewModel;
-            ctx.CurrentPage = StudentForm;
+            _navigator.NavigateTo(_studentForm);
         }
 
         public ICommand RemoveStudentCommand { get; private set; }
         private async void RemoveStudent(object obj)
         {
-            var window = Application.Current.MainWindow as MetroWindow;
-
             string deleteString;
 
             if (SelectedStudents.Count == 1)
@@ -99,23 +78,22 @@ namespace AKITE.Contingent.Client.ViewModels
             else
             {
                 deleteString = $"Вы действительно хотите удалить студентов:\n";
-                foreach (var _s in SelectedStudents)
+                foreach (var st in SelectedStudents)
                 {
-                    var s = _s as Student;
-                    deleteString += $"- {s.ShortName}\n";
+                    if (st is Student s)
+                        deleteString += $"- {s.ShortName}\n";
                 }
             }
 
-            var result = await window.ShowMessageAsync("Удаление студентов", deleteString,
+            var result = await _dialogCoordinator.ShowMessageAsync(this, "Удаление студентов", deleteString,
                 MessageDialogStyle.AffirmativeAndNegative,
                 new MetroDialogSettings { AnimateHide = false, AnimateShow = false });
 
             if (result == MessageDialogResult.Negative) return;
 
-            foreach (var _s in SelectedStudents.ToList())
+            foreach (var st in SelectedStudents.ToList())
             {
-                var s = _s as Student;
-                if (s != null)
+                if (st is Student s)
                 {
                     await StudentDataService.DeleteStudent(s);
                 }
@@ -124,23 +102,26 @@ namespace AKITE.Contingent.Client.ViewModels
         }
 
         public ICommand OnLoadedCommand { get; set; }
-
         // FIXME: Пофиксить утечку памяти
-        private async void Loaded(object s)
+        private void Loaded(object s)
         {
-            LoadingStudents = true;
-            await StudentDataService.RefreshStudents();
-            LoadingStudents = false;
+            //LoadingStudents = true;
+            //await StudentDataService.RefreshStudents();
+            //LoadingStudents = false;
         }
         #endregion
 
-        public StudentDataService StudentDataService { get; set; }
-        private IDialogCoordinator _dialogCoordinator;
+        private readonly DataCoordinator _dataCoordinator;
+        private readonly IDialogCoordinator _dialogCoordinator;
+        private readonly Navigator _navigator;
 
-        public StudentListingViewModel(IDialogCoordinator dialogCoordinator, StudentDataService studentDataService)
+        public StudentDataService StudentDataService => _dataCoordinator.StudentDataService;
+
+        public StudentListingViewModel(IDialogCoordinator dialogCoordinator, DataCoordinator dataCoordinator, Navigator navigator)
         {
             _dialogCoordinator = dialogCoordinator;
-            StudentDataService = studentDataService;
+            _dataCoordinator = dataCoordinator;
+            _navigator = navigator;
 
             SelectedStudents = new ObservableCollection<object>();
 

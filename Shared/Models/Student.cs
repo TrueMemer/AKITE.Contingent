@@ -8,26 +8,7 @@ using AKITE.Contingent.Helpers;
 
 namespace AKITE.Contingent.Models
 {
-    public class Passport
-    {
-        public int Id { get; set; }
-        public int? Type { get; set; }
-        public string Number { get; set; }
-        public string Place { get; set; }
-        public DateTime? Date { get; set; }
-    }
-
-    public class Address
-    {
-        public int Id { get; set; }
-        public string Region { get; set; }
-        public string City { get; set; }
-        public string Street { get; set; }
-        public string House { get; set; }
-        public string FlatNum { get; set; }
-    }
-
-    public partial class Student : BaseBindable, ICloneable
+    public partial class Student : BaseBindable
     {
         public Student()
         {
@@ -65,7 +46,28 @@ namespace AKITE.Contingent.Models
         public int? Gender { get; set; }
         public DateTime CreationDate { get; set; }
 
-        public Passport Passport { get; set; }
+        public int? PassportType { get; set; }
+        public string PassportNumber { get; set; }
+        public string PassportPlace { get; set; }
+        public DateTime? PassportDate { get; set; }
+
+        public string Region { get; set; }
+        public string City { get; set; }
+        public string Street { get; set; }
+        public string House { get; set; }
+        public string FlatNum { get; set; }
+
+        private string _facticalRegion;
+        private string _facticalCity;
+        private string _facticalStreet;
+        private string _facticalHouse;
+        private string _facticalFlatNum;
+
+        public string FacticalRegion { get => AddressesIdentical ? Region : _facticalRegion; set => _facticalRegion = value; }
+        public string FacticalCity { get => AddressesIdentical ? City : _facticalCity; set => _facticalCity = value;}
+        public string FacticalStreet { get => AddressesIdentical ? Street : _facticalStreet; set => _facticalStreet = value; }
+        public string FacticalHouse { get => AddressesIdentical ? House : _facticalHouse; set => _facticalHouse = value; }
+        public string FacticalFlatNum { get => AddressesIdentical ? FlatNum : _facticalFlatNum; set => _facticalFlatNum = value; }
 
         private bool _addressesIdentical;
         public bool AddressesIdentical
@@ -75,28 +77,17 @@ namespace AKITE.Contingent.Models
             {
                 _addressesIdentical = value;
                 OnPropertyChanged();
-                OnPropertyChanged("FacticalAddress");
+                OnPropertyChanged("FacticalRegion");
+                OnPropertyChanged("FacticalCity");
+                OnPropertyChanged("FacticalStreet");
+                OnPropertyChanged("FacticalHouse");
+                OnPropertyChanged("FacticalFlatNum");
             }
         }
-
-        public string GenderName => Gender.HasValue ? Student.Genders[Gender.Value] : "";
-
-        private Address _facticalAddress;
-        public Address FacticalAddress
-        {
-            get => AddressesIdentical ? RegistrationAddress : _facticalAddress;
-            set
-            {
-                if (!AddressesIdentical) _facticalAddress = value;
-            }
-        }
-        public Address RegistrationAddress { get; set; }
 
         public int? CaseNum { get; set; }
 
         public int? StudyForm { get; set; }
-        public string StudyFormName => StudyForm.HasValue ? Student.StudyForms[StudyForm.Value] : "";
-
         public int? Degree { get; set; }
 
         public string PhoneNumber { get; set; }
@@ -116,13 +107,6 @@ namespace AKITE.Contingent.Models
                 OnPropertyChanged("GroupName");
                 OnPropertyChanged("SpecialtyName");
             }
-        }
-
-        public string ShortName => $"{LastName} {FirstName[0]}. {MidName ?? ""}.";
-
-        public object Clone()
-        {
-            return this.MemberwiseClone();
         }
     }
 }

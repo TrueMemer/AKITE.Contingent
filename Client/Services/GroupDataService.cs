@@ -1,39 +1,70 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Windows;
+using AKITE.Contingent.Helpers;
 using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Services
 {
-    public static class GroupDataService
+    public class GroupDataService : BaseBindable
     {
-        private static readonly BindingList<Group> Groups;
+        private readonly HttpClient _http;
 
-        static GroupDataService()
+        private BindingList<Group> _groups = new BindingList<Group>();
+        public BindingList<Group> Groups
         {
-            Groups = new BindingList<Group>
+            get => _groups;
+            set
             {
-                new Group { SpecialtyId = 0 },
-                new Group { GroupID = 17, GroupNum = 1, SpecialtyId = 2 },
-                new Group { GroupID = 17, GroupNum = 2, SpecialtyId = 2 },
-                new Group { GroupID = 17, GroupNum = 3, SpecialtyId = 2 },
-                new Group { GroupID = 19, GroupNum = 1, SpecialtyId = 1 },
-                new Group { GroupID = 19, GroupNum = 2, SpecialtyId = 1 },
+                _groups = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public GroupDataService()
+        {
+            _http = new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:5001/")
             };
+            _http.DefaultRequestHeaders.Accept.Clear();
+            _http.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public static void AddGroup(Group group)
+        public async Task AddGroup(Group group)
         {
-            if (group != null)
-                Groups.Add(group);
+            var request = await _http.PostAsJsonAsync("api/groups", group);
+
+            if (!request.IsSuccessStatusCode)
+            {
+                MessageBox.Show("Не удалось добавить группу (сервер недоступен?)");
+                Debug.WriteLine(request.StatusCode);
+                Debug.WriteLine(await request.Content.ReadAsStringAsync());
+                return;
+            }
+
+            Groups.Add(await request.Content.ReadAsAsync<Group>());
         }
 
-        public static IEnumerable<Group> GetGroups()
+        public async Task RefreshGroups()
         {
-            return Groups;
+            var request = await _http.GetAsync("api/groups");
+
+            if (!request.IsSuccessStatusCode)
+            {
+                Debug.WriteLine(request.StatusCode);
+                Debug.WriteLine(await request.Content.ReadAsStringAsync());
+                throw new System.Exception("Не удалось получить группы! (возможно сервер недоступен)");
+            }
+
+            var response = await request.Content.ReadAsAsync<BindingList<Group>>();
+
+            Groups = response;
         }
     }
 }

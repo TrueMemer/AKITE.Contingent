@@ -1,135 +1,112 @@
 ﻿using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Client.Pages;
-using AKITE.Contingent.Client.ViewModels;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interactivity;
 using MahApps.Metro.IconPacks;
-using AKITE.Contingent.Client.Services;
 using AKITE.Contingent.Helpers;
 
 namespace AKITE.Contingent.Client.ViewModels
 {
-    internal class MenuItem : BaseBindable
+    public class ApplicationViewModel : BaseBindable
     {
-        private object _icon;
-        private string _text;
-        private bool _isEnabled = true;
-        private RelayCommand _command;
-        private Page _navigationDestination;
-
-        public object Icon
+        public class MenuItem : BaseBindable
         {
-            get { return this._icon; }
-            set { this.SetProperty(ref this._icon, value); }
-        }
+            private object _icon;
+            private string _text;
+            private bool _isEnabled = true;
+            private RelayCommand _command;
+            private Page _navigationDestination;
 
-        public string Text
-        {
-            get { return this._text; }
-            set { this.SetProperty(ref this._text, value); }
-        }
-
-        public bool IsEnabled
-        {
-            get { return this._isEnabled; }
-            set { this.SetProperty(ref this._isEnabled, value); }
-        }
-
-        public ICommand Command
-        {
-            get { return this._command; }
-            set { this.SetProperty(ref this._command, (RelayCommand)value); }
-        }
-
-        public Page NavigationDestination
-        {
-            get { return this._navigationDestination; }
-            set { this.SetProperty(ref this._navigationDestination, value); }
-        }
-
-        public bool IsNavigation => this._navigationDestination != null;
-    }
-
-    class ApplicationViewModel : BaseBindable
-    {
-        #region Страницы
-        private Page currentPage;
-        public Page CurrentPage
-        {
-            get => currentPage;
-            set
+            public object Icon
             {
-                currentPage = value;
-                OnPropertyChanged();
+                get => _icon;
+                set => SetProperty(ref _icon, value);
             }
+
+            public string Text
+            {
+                get => _text;
+                set => SetProperty(ref _text, value);
+            }
+
+            public bool IsEnabled
+            {
+                get => _isEnabled;
+                set => SetProperty(ref _isEnabled, value);
+            }
+
+            public ICommand Command
+            {
+                get => _command;
+                set => SetProperty(ref _command, (RelayCommand)value);
+            }
+
+            public Page NavigationDestination
+            {
+                get => _navigationDestination;
+                set => SetProperty(ref _navigationDestination, value);
+            }
+
+            public bool IsNavigation => _navigationDestination != null;
         }
 
-        public void GoBack()
-        {
-            CurrentPage = StudentListing;
-        }
+        #region Страницы
+        // Заглушки
+        private readonly Page _dashboard = new Dashboard();
+        private readonly Page _settings = new Settings();
+        private readonly Page _about = new About();
 
-        private Page Dashboard;
-        private Page StudentListing;
-
-        private Page Settings;
-        private Page About;
-        private Page GroupManager;
+        private readonly Page _studentListing;
+        private readonly Page _groupManager;
         #endregion
 
         #region Команды
-        public ICommand WindowLoaded { get; private set; }
+
+        public ICommand WindowLoaded { get; }
         private void OnWindowLoaded(object obj)
         {
-            var window = obj as MainWindow;
-
+            if (!(obj is MainWindow window)) return;
             window.HambMenu.SelectedItem = AppMenu[0];
             HambItemClicked.Execute(window.HambMenu.SelectedItem);
         }
 
-        public ICommand HambItemClicked { get; private set; }
+        public ICommand HambItemClicked { get; }
         private void OnHambItemClicked(object obj)
         {
-            var item = obj as MenuItem;
-            if (item == null) return;
-            CurrentPage = item.NavigationDestination;
+            if (!(obj is MenuItem item)) return;
+            Navigator.NavigateTo(item.NavigationDestination);
         }
         #endregion
 
         public BindingList<MenuItem> AppMenu { get; set; }
         public BindingList<MenuItem> OptionsMenu { get; set; }
 
-        public StudentDataService StudentDataService { get; set; }
+        public Navigator Navigator { get; }
 
-        public ApplicationViewModel()
+        public ApplicationViewModel(DataCoordinator dataCoordinator)
         {
-            StudentDataService = new StudentDataService();
+            Navigator = new Navigator();
 
             WindowLoaded = new RelayCommand(OnWindowLoaded);
             HambItemClicked = new RelayCommand(OnHambItemClicked);
 
-            Dashboard = new Dashboard();
-            StudentListing = new StudentListing(StudentDataService);
-            Settings = new Settings();
-            About = new About();
-            GroupManager = new GroupManager();
+            _studentListing = new StudentListing(dataCoordinator, Navigator);
+            _settings = new Settings();
+            _about = new About();
+            _groupManager = new GroupManager(dataCoordinator);
 
-            AppMenu = new BindingList<MenuItem>();
-            // AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.TachometerAltSolid }, Text = "Статистика", NavigationDestination = Dashboard });
-            AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.UserAltSolid }, Text = "Список студентов", NavigationDestination = StudentListing });
-            AppMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.UsersSolid }, Text = "Менеджер групп", NavigationDestination = GroupManager });
-            OptionsMenu = new BindingList<MenuItem>();
-            OptionsMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.CogSolid }, Text = "Настройки", NavigationDestination = Settings });
-            OptionsMenu.Add(new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.InfoSolid }, Text = "О программе", NavigationDestination = About });
+            AppMenu = new BindingList<MenuItem>
+            {
+                new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.UserAltSolid }, Text = "Список студентов", NavigationDestination = _studentListing },
+                new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.UsersSolid }, Text = "Менеджер групп", NavigationDestination = _groupManager }
+            };
+
+            OptionsMenu = new BindingList<MenuItem>
+            {
+                new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.CogSolid }, Text = "Настройки", NavigationDestination = _settings },
+                new MenuItem { Icon = new PackIconFontAwesome { Kind = PackIconFontAwesomeKind.InfoSolid }, Text = "О программе", NavigationDestination = _about }
+            };
         }
     }
 }

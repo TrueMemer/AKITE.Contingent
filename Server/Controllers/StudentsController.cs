@@ -18,54 +18,6 @@ namespace Server.Controllers
         public StudentsController(StudentsContext ctx)
         {
             DB = ctx;
-            DB.Database.EnsureCreated();
-            if (DB.Students.Any()) return;
-            DB.Students.Add(
-                new Student
-                {
-                    CaseNum = 1, Birthday = DateTime.Now, GroupIndex = 1, Gender = 0, FirstName = "Иван",
-                    LastName = "Иванов", MidName = "Иванович", AttNum = "1", CertNum = "1"
-                });
-            DB.Students.Add(
-                new Student
-                {
-                    CaseNum = 2, Birthday = DateTime.Now, GroupIndex = 1, Gender = 0, FirstName = "Петр",
-                    LastName = "Петров", MidName = "Петрович", AttNum = "2", CertNum = "2"
-                });
-            DB.Students.Add(
-                new Student
-                {
-                    CaseNum = 3, Birthday = DateTime.Now, GroupIndex = 2, Gender = 0, FirstName = "Сидоров",
-                    LastName = "Никита", MidName = "Федорович", AttNum = "3", CertNum = "3"
-                });
-            DB.Students.Add(
-                new Student
-                {
-                    CaseNum = 4, Birthday = DateTime.Now, GroupIndex = 3, Gender = 1,
-                    FirstName = "Алиса", LastName = "Рейх", MidName = "Руслановна", AttNum = "4",
-                    CertNum = "4"
-                });
-            DB.Students.Add(
-                new Student
-                {
-                    CaseNum = 5, Birthday = DateTime.Now, GroupIndex = 3, Gender = 1,
-                    FirstName = "Анастасия", LastName = "Лис", MidName = "Александровна",
-                    AttNum = "5", CertNum = "5"
-                });
-            DB.Students.Add(
-                new Student
-                {
-                    CaseNum = 6, Birthday = DateTime.Now, GroupIndex = 4, Gender = 0,
-                    FirstName = "Александр", LastName = "Пирогов", MidName = "Викторович",
-                    AttNum = "6", CertNum = "6"
-                });
-            DB.Students.Add(new Student
-            {
-                CaseNum = 7, Birthday = DateTime.Now, GroupIndex = 4, Gender = 0,
-                FirstName = "Евгений", LastName = "Титаренко", MidName = "Андреевич",
-                AttNum = "7", CertNum = "7"
-            });
-            DB.SaveChanges();
         }
 
         // GET: api/<controller>

@@ -15,17 +15,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AKITE.Contingent.Client.Services;
+using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Models;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace AKITE.Contingent.Client.Pages
 {
     public partial class StudentForm : Page
     {
-        public StudentForm(Student SelectedStudent, StudentDataService studentDataService)
+        public StudentForm(Student SelectedStudent, DataCoordinator dataCoordinator, Navigator navigator, IDialogCoordinator dialogCoordinator)
         {
             InitializeComponent();
 
-            DataContext = new StudentFormViewModel(SelectedStudent, studentDataService);
+            DataContext = new StudentFormViewModel(SelectedStudent, dataCoordinator, navigator, dialogCoordinator);
         }
     }
 }

@@ -7,11 +7,26 @@ using System.Threading.Tasks;
 
 namespace AKITE.Contingent.Models
 {
-    public partial class Student
+    public partial class Student : ICloneable
     {
-        public Group Group => GroupDataService.GetGroups().ElementAt(GroupIndex);
+        private static GroupDataService _groupDataService;
+
+        public static void SetService(GroupDataService groupDataService)
+        {
+            _groupDataService = groupDataService;
+        }
+
+        public Group Group => _groupDataService.Groups.ElementAt(GroupIndex);
 
         public string GroupName => Group.ShortName;
         public string SpecialtyName => Group.Specialty.FullName;
+        public string StudyFormName => StudyForm.HasValue ? Student.StudyForms[StudyForm.Value] : "";
+        public string GenderName => Gender.HasValue ? Student.Genders[Gender.Value] : "";
+        public string ShortName => $"{LastName} {FirstName[0]}. {MidName ?? ""}.";
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

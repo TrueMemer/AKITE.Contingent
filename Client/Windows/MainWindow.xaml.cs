@@ -1,8 +1,11 @@
 ﻿using AKITE.Contingent.Client.ViewModels;
-using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,21 +15,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using AKITE.Contingent.Client.Services;
 using AKITE.Contingent.Client.Utilities;
 
-namespace AKITE.Contingent.Client.Pages
+namespace AKITE.Contingent.Client
 {
     /// <summary>
-    /// Логика взаимодействия для StudentListing.xaml
+    /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class StudentListing : Page
+    ///
+
+    public partial class MainWindow : MetroWindow
     {
-        public StudentListing(DataCoordinator dataCoordinator, Navigator navigator)
+        public MainWindow(DataCoordinator dataCoordinator)
         {
-            DataContext = new StudentListingViewModel(DialogCoordinator.Instance, dataCoordinator, navigator);
+            DataContext = new ApplicationViewModel(dataCoordinator);
 
             InitializeComponent();
         }
