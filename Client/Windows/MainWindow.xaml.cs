@@ -1,5 +1,4 @@
-﻿using AKITE.Contingent.Client.Models;
-using AKITE.Contingent.Client.ViewModels;
+﻿using AKITE.Contingent.Client.ViewModels;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
@@ -17,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using AKITE.Contingent.Client.Utilities;
 
 namespace AKITE.Contingent.Client
 {
@@ -27,10 +27,11 @@ namespace AKITE.Contingent.Client
 
     public partial class MainWindow : MetroWindow
     {
-        public MainWindow()
+        public MainWindow(DataCoordinator dataCoordinator)
         {
+            DataContext = new ApplicationViewModel(dataCoordinator);
+
             InitializeComponent();
-            DataContext = new ApplicationViewModel();
         }
     }
 }

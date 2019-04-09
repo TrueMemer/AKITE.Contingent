@@ -3,29 +3,30 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
       xmlns:local="clr-namespace:AKITE.Contingent.Client.Pages"
-      xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
-      xmlns:Utils="clr-namespace:AKITE.Contingent.Client.Utilities"
-      xmlns:Models="clr-namespace:AKITE.Contingent.Client.Models"      
+      xmlns:utils="clr-namespace:AKITE.Contingent.Client.Utilities"
+      xmlns:models="clr-namespace:AKITE.Contingent.Models"
+      xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+      Dialog:DialogParticipation.Register="{Binding}"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="926"
       Title="StudentForm">
 
     <Page.Resources>
         <Style BasedOn="{StaticResource MetroTextBox}" TargetType="{x:Type TextBox}">
-            <Setter Property="Metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
+            <Setter Property="metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
         <Style BasedOn="{StaticResource MetroComboBox}" TargetType="{x:Type ComboBox}">
-            <Setter Property="Metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
+            <Setter Property="metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
         <Style BasedOn="{StaticResource MetroDatePicker}" TargetType="{x:Type DatePicker}">
-            <Setter Property="Metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
+            <Setter Property="metro:TextBoxHelper.UseFloatingWatermark" Value="True"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
-        <Utils:InverseBooleanConverter x:Key="InvertBooleanConverter"/>
+        <utils:InverseBooleanConverter x:Key="InvertBooleanConverter"/>
     </Page.Resources>
 
     <Grid>
@@ -51,32 +52,32 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Row="0" Grid.Column="0" Margin="0 0 5 0">
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Фамилия" Text="{Binding Path=EditedStudent.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Имя" Text="{Binding Path=EditedStudent.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Отчество" Text="{Binding Path=EditedStudent.MidName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Фамилия" Text="{Binding Path=EditedStudent.LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Имя" Text="{Binding Path=EditedStudent.FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Отчество" Text="{Binding Path=EditedStudent.MidName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
                             </StackPanel>
                             <StackPanel Margin="0 0 5 0" Grid.Row="0" Grid.Column="1">
-                                <ComboBox MinHeight="+27" Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Пол" SelectedIndex="{Binding Path=EditedStudent.Gender}" ItemsSource="{Binding Source={x:Static Models:Student.Genders}}" />
-                                <DatePicker Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Дата рождения" SelectedDate="{Binding Path=EditedStudent.Birthday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></DatePicker>
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Номер дела" Text="{Binding Path=EditedStudent.CaseNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                                <ComboBox MinHeight="+27" Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Пол" SelectedIndex="{Binding Path=EditedStudent.Gender}" ItemsSource="{Binding Source={x:Static models:Student.Genders}}" />
+                                <DatePicker Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Дата рождения" SelectedDate="{Binding Path=EditedStudent.Birthday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></DatePicker>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Номер дела" Text="{Binding Path=EditedStudent.CaseNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
                             </StackPanel>
                             <GroupBox Margin="0 1 5 0"  Header="Адрес регистрации" Grid.Row="1" Grid.Column="0">
                                 <StackPanel>
-                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.Region, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Район/Область"/>
-                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.City, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Город/Поселок"/>
-                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.Street, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Улица/Микрорайон"/>
-                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.House, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Дом"/>
-                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.RegistrationAddress.FlatNum, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Квартира (если уместно)"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.Region, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Район/Область"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.City, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Город/Поселок"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.Street, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Улица/Микрорайон"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.House, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Дом"/>
+                                    <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FlatNum, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Квартира (если уместно)"/>
                                 </StackPanel>
                             </GroupBox>
                             <GroupBox Margin="0 1 5 0" IsEnabled="{Binding ElementName=identicalAddress, Mode=OneWay, Path=IsChecked, Converter={StaticResource InvertBooleanConverter}}" Header="Адрес проживания" Grid.Row="1" Grid.Column="1">
                                 <StackPanel>
                                     <StackPanel>
-                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.Region, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Район/Область"/>
-                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.City, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Город/Поселок"/>
-                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.Street, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Улица/Микрорайон"/>
-                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.House, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Дом"/>
-                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalAddress.FlatNum, UpdateSourceTrigger=PropertyChanged}" Metro:TextBoxHelper.Watermark="Квартира (если уместно)"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalRegion, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Район/Область"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalCity, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Город/Поселок"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalStreet, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Улица/Микрорайон"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalHouse, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Дом"/>
+                                        <TextBox Margin="0 0 0 1" Text="{Binding Path=EditedStudent.FacticalFlatNum, UpdateSourceTrigger=PropertyChanged}" metro:TextBoxHelper.Watermark="Квартира (если уместно)"/>
                                     </StackPanel>
                                 </StackPanel>
                             </GroupBox>
@@ -95,9 +96,9 @@
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="1" Margin="0 0 5 0">
-                                    <ComboBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Тип документа" Metro:TextBoxHelper.ClearTextButton="True"  SelectedIndex="{Binding Path=EditedStudent.Passport.Type, TargetNullValue=-1}" ItemsSource="{Binding Source={x:Static Models:Student.PassportTypes}}" />
-                                    <DatePicker Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Дата выдачи"  SelectedDate="{Binding Path=EditedStudent.Passport.Date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  SelectedDateFormat="Long"></DatePicker>
-                                    <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Кем выдан"  Text="{Binding Path=EditedStudent.Passport.Place, UpdateSourceTrigger=PropertyChanged}" />
+                                    <ComboBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Тип документа" metro:TextBoxHelper.ClearTextButton="True"  SelectedIndex="{Binding Path=EditedStudent.PassportType, TargetNullValue=-1}" ItemsSource="{Binding Source={x:Static models:Student.PassportTypes}}" />
+                                    <DatePicker Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Дата выдачи"  SelectedDate="{Binding Path=EditedStudent.PassportDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  SelectedDateFormat="Long"></DatePicker>
+                                    <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Кем выдан"  Text="{Binding Path=EditedStudent.PassportPlace, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                             </Grid>
                             <Grid Grid.Column="1">
@@ -106,7 +107,7 @@
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Серия и номер"  Text="{Binding Path=EditedStudent.Passport.Number, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Серия и номер"  Text="{Binding Path=EditedStudent.PassportNumber, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
                             </Grid>
                         </Grid>
                     </Expander>
@@ -117,23 +118,11 @@
                                 <ColumnDefinition ></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0 0 5 0">
-                                <ComboBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Специальность"  IsEnabled="False" SelectedIndex="{Binding Path=EditedStudent.Group.SpecialtyID, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Specialties}" >
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding FullName}"></TextBlock>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
-                                <ComboBox IsEnabled="False" Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Группа"  SelectedIndex="{Binding Path=EditedStudent.GroupIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Groups}" >
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding ShortName}"></TextBlock>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Специальность" IsEnabled="False" Text="{Binding Path=EditedStudent.Group.Specialty.FullName, Mode=OneWay}"/>
+                                <TextBox IsEnabled="False" Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Группа" Text="{Binding Path=EditedStudent.Group.ShortName, Mode=OneWay}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
-                                <ComboBox Margin="0 1 0 0" Metro:TextBoxHelper.ClearTextButton="True" Metro:TextBoxHelper.Watermark="Форма обучения"  SelectedIndex="{Binding Path=EditedStudent.StudyForm, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={x:Static Models:Student.StudyForms}}" />
+                                <ComboBox Margin="0 1 0 0" metro:TextBoxHelper.ClearTextButton="True" metro:TextBoxHelper.Watermark="Форма обучения"  SelectedIndex="{Binding Path=EditedStudent.StudyForm, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={x:Static models:Student.StudyForms}}" />
                             </StackPanel>
                         </Grid>
                     </Expander>
@@ -144,12 +133,12 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0 0 5 0">
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Номер аттестата"  Text="{Binding Path=EditedStudent.CertNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Номер приложения к аттестату"  Text="{Binding Path=EditedStudent.AttNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Номер аттестата"  Text="{Binding Path=EditedStudent.CertNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Номер приложения к аттестату"  Text="{Binding Path=EditedStudent.AttNum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
-                                <ComboBox Height="auto" Margin="0 1 0 0" SelectedIndex="{Binding Path=EditedStudent.Degree}" ItemsSource="{Binding Source={x:Static Models:Student.Degrees}}" Metro:TextBoxHelper.ClearTextButton="True" Metro:TextBoxHelper.Watermark="Степень образования"/>
-                                <TextBox Height="auto" Margin="0 1 0 0" Text="{Binding Path=EditedStudent.AverageGrade}" Metro:TextBoxHelper.Watermark="Средний балл аттестата"/>
+                                <ComboBox Height="auto" Margin="0 1 0 0" SelectedIndex="{Binding Path=EditedStudent.Degree}" ItemsSource="{Binding Source={x:Static models:Student.Degrees}}" metro:TextBoxHelper.ClearTextButton="True" metro:TextBoxHelper.Watermark="Степень образования"/>
+                                <TextBox Height="auto" Margin="0 1 0 0" Text="{Binding Path=EditedStudent.AverageGrade}" metro:TextBoxHelper.Watermark="Средний балл аттестата"/>
                             </StackPanel>
                         </Grid>
                     </Expander>
@@ -163,11 +152,11 @@
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0 0 5 0">
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Номер телефона"  Text="{Binding Path=EditedStudent.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Электронная почта"  Text="{Binding Path=EditedStudent.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Номер телефона"  Text="{Binding Path=EditedStudent.PhoneNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Электронная почта"  Text="{Binding Path=EditedStudent.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
-                                <TextBox Margin="0 1 0 0" Metro:TextBoxHelper.Watermark="Иностранный язык"  Text="{Binding Path=EditedStudent.Language, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
+                                <TextBox Margin="0 1 0 0" metro:TextBoxHelper.Watermark="Иностранный язык"  Text="{Binding Path=EditedStudent.Language, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  ></TextBox>
                             </StackPanel>
                         </Grid>
                     </Expander>

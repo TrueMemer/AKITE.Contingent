@@ -55,7 +55,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <Controls:HamburgerMenu.Content>
-                <Frame Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden" Opacity="1"></Frame>
+                <Frame Content="{Binding Path=Navigator.CurrentPage}" NavigationUIVisibility="Hidden" Opacity="1"></Frame>
             </Controls:HamburgerMenu.Content>
         </Controls:HamburgerMenu>
 

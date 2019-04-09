@@ -1,70 +1,69 @@
 ﻿using AKITE.Contingent.Client.Dialogs;
 using AKITE.Contingent.Client.Utilities;
-using AKITE.Contingent.Client.Models;
-using AKITE.Contingent.Client.Services;
 using MahApps.Metro.Controls.Dialogs;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
+using AKITE.Contingent.Helpers;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.ViewModels
 {
-    class GroupManagerViewModel : BaseBindable
+    public class GroupManagerViewModel : BaseBindable
     {
-        public IEnumerable<Specialty> Specialties => SpecialtyDataService.GetSpecialties().Skip(1);
+        public IEnumerable<Specialty> Specialties => _dataCoordinator.SpecialtyDataService.Specialties.Skip(1);
 
-        private IDialogCoordinator dialogCoordinator;
+        private readonly IDialogCoordinator _dialogCoordinator;
+        private readonly DataCoordinator _dataCoordinator;
 
-        public GroupManagerViewModel(IDialogCoordinator dialogCoordinator)
+        public GroupManagerViewModel(IDialogCoordinator dialogCoordinator, DataCoordinator dataCoordinator)
         {
-            this.dialogCoordinator = dialogCoordinator;
+            _dialogCoordinator = dialogCoordinator;
+            _dataCoordinator = dataCoordinator;
+
+            SelectedSpecialty += 0;
 
             AddGroupCommand = new RelayCommand(AddGroup);
         }
 
-        private IEnumerable<Group> selectedGroups;
+        private IEnumerable<Group> _selectedGroups;
         public IEnumerable<Group> SelectedGroups
         {
-            get => selectedGroups;
+            get => _selectedGroups;
             set
             {
-                selectedGroups = value;
+                _selectedGroups = value;
                 OnPropertyChanged();
             }
         }
 
-        private int selectedSpecialty = -1;
+        private int _selectedSpecialty;
         public int SelectedSpecialty
         {
-            get => selectedSpecialty;
+            get => _selectedSpecialty;
             set
             {
-                selectedSpecialty = value;
+                _selectedSpecialty = value;
                 OnPropertyChanged();
-                SelectedGroups = GroupDataService.GetGroups().Where(g => g.SpecialtyID == SelectedSpecialty + 1);
+                SelectedGroups = _dataCoordinator.GroupDataService.Groups.Where(g => g.SpecialtyId == SelectedSpecialty + 1);
             }
         }
 
         public ICommand AddGroupCommand { get; private set; }
         public async void AddGroup(object obj)
         {
-                var dialog = new NewGroup();
-                dialog.SubmitButton.Click += async (object s, RoutedEventArgs e) =>
-                {
-                    GroupDataService.AddGroup(new Group { GroupID = int.Parse(dialog.Num), GroupNum = int.Parse(dialog.ID), SpecialtyID = SelectedSpecialty + 1 });
-                    SelectedSpecialty += 0;
-                    await dialogCoordinator.HideMetroDialogAsync(this, dialog);
-                };
-                dialog.CancelButton.Click += async (object s, RoutedEventArgs e) =>
-                {
-                    await dialogCoordinator.HideMetroDialogAsync(this, dialog);
-                };
-                await dialogCoordinator.ShowMetroDialogAsync(this, dialog);
+            var dialog = new NewGroup(_dataCoordinator);
+            dialog.SubmitButton.Click += async (s, e) =>
+            {
+                await _dataCoordinator.GroupDataService.AddGroup(new Group { GroupID = int.Parse(dialog.Num), GroupNum = int.Parse(dialog.ID), SpecialtyId = SelectedSpecialty + 1 });
+                SelectedSpecialty += 0;
+                await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
+            };
+            dialog.CancelButton.Click += async (s, e) =>
+            {
+                await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
+            };
+            await _dialogCoordinator.ShowMetroDialogAsync(this, dialog);
          }
     }
 }

@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AKITE.Contingent.Client.Services;
+using AKITE.Contingent.Client.Utilities;
 
 namespace AKITE.Contingent.Client.Pages
 {
@@ -22,9 +24,9 @@ namespace AKITE.Contingent.Client.Pages
     /// </summary>
     public partial class StudentListing : Page
     {
-        public StudentListing()
+        public StudentListing(DataCoordinator dataCoordinator, Navigator navigator)
         {
-            DataContext = new StudentListingViewModel(DialogCoordinator.Instance);
+            DataContext = new StudentListingViewModel(DialogCoordinator.Instance, dataCoordinator, navigator);
 
             InitializeComponent();
         }

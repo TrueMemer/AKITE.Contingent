@@ -1,5 +1,4 @@
-﻿using AKITE.Contingent.Client.Models;
-using AKITE.Contingent.Client.Services;
+﻿using AKITE.Contingent.Client.Services;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AKITE.Contingent.Client.Utilities;
+using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Dialogs
 {
@@ -23,14 +24,18 @@ namespace AKITE.Contingent.Client.Dialogs
     /// </summary>
     public partial class NewGroup : CustomDialog
     {
-        public NewGroup()
+        private readonly DataCoordinator _dataCoordinator;
+
+        public NewGroup(DataCoordinator dataCoordinator)
         {
+            _dataCoordinator = dataCoordinator;
+
             InitializeComponent();
 
             DataContext = this;
         }
 
-        public IEnumerable<Specialty> Specialties => SpecialtyDataService.GetSpecialties().Skip(1);
+        public IEnumerable<Specialty> Specialties => _dataCoordinator.SpecialtyDataService.Specialties.Skip(1);
 
         public string ID { get; set; }
         public string Num { get; set; }

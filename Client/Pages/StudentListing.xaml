@@ -21,6 +21,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Syncfusion:SfBusyIndicator VerticalAlignment="Center" HorizontalAlignment="Center" IsBusy="{Binding LoadingStudents, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" AnimationType="Gear" />
         <DockPanel Margin="10 0 10 0" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
             <Menu DockPanel.Dock="Left" Width="auto" Height="30" VerticalAlignment="Bottom">
                 <MenuItem Padding="-1 5 5 5" Header="Добавить студента" Command="{Binding AddStudentCommand}" Icon="{iconPacks:FontAwesome UserPlusSolid}"/>
@@ -31,7 +32,7 @@
         </DockPanel>
         <Syncfusion:SfDataGrid Grid.Row="1"
                                AllowGrouping="True" AllowSorting="True" AutoExpandGroups="True"
-                               ItemsSource="{Binding Students}" ShowColumnWhenGrouped="False"
+                               ItemsSource="{Binding Path=StudentDataService.Students}" ShowColumnWhenGrouped="False"
                                AutoGenerateColumns="False" GroupCaptionTextFormat=" {Key}"
                                SelectionUnit="Row" NavigationMode="Row" SelectionMode="Extended"
                                SelectedItems="{Binding SelectedStudents}" FilterRowPosition="FixedTop" 
@@ -65,6 +66,9 @@
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="CellDoubleTapped">
                     <i:InvokeCommandAction Command="{Binding OpenStudentCommand}"></i:InvokeCommandAction>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="Loaded">
+                    <i:InvokeCommandAction Command="{Binding OnLoadedCommand}"></i:InvokeCommandAction>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Syncfusion:SfDataGrid>
