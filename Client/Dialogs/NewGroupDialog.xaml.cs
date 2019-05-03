@@ -16,28 +16,22 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Models;
+using MahApps.Metro.Controls;
+using AKITE.Contingent.Client.ViewModels;
 
 namespace AKITE.Contingent.Client.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для NewGroup.xaml
     /// </summary>
-    public partial class NewGroup : CustomDialog
+    public partial class NewGroupDialog : MetroWindow
     {
-        private readonly DataCoordinator _dataCoordinator;
 
-        public NewGroup(DataCoordinator dataCoordinator)
+        public NewGroupDialog(DataCoordinator dataCoordinator, int specialtyId)
         {
-            _dataCoordinator = dataCoordinator;
-
             InitializeComponent();
 
-            DataContext = this;
+            DataContext = new NewGroupDialogViewModel(dataCoordinator, specialtyId);
         }
-
-        public IEnumerable<Specialty> Specialties => _dataCoordinator.SpecialtyDataService.Specialties.Skip(1);
-
-        public string ID { get; set; }
-        public string Num { get; set; }
     }
 }

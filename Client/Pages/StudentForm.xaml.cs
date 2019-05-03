@@ -18,16 +18,17 @@ using AKITE.Contingent.Client.Services;
 using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Models;
 using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
 
 namespace AKITE.Contingent.Client.Pages
 {
-    public partial class StudentForm : Page
+    public partial class StudentForm : MetroWindow
     {
-        public StudentForm(Student SelectedStudent, DataCoordinator dataCoordinator, Navigator navigator, IDialogCoordinator dialogCoordinator)
+        public StudentForm(Student SelectedStudent, DataCoordinator dataCoordinator, IDialogCoordinator dialogCoordinator)
         {
             InitializeComponent();
 
-            DataContext = new StudentFormViewModel(SelectedStudent, dataCoordinator, navigator, dialogCoordinator);
+            DataContext = new StudentFormViewModel(SelectedStudent, dataCoordinator, dialogCoordinator);
         }
     }
 }

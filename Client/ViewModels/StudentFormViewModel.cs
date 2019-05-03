@@ -2,6 +2,7 @@
 using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Helpers;
 using AKITE.Contingent.Models;
+using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Syncfusion.Data.Extensions;
 using System.Windows.Input;
@@ -18,6 +19,8 @@ namespace AKITE.Contingent.Client.ViewModels
         public ICommand SaveCommand { get; }
         private async void SaveStudent(object obj)
         {
+            var dialog = obj as MetroWindow;
+
             if (string.IsNullOrEmpty(EditedStudent.LastName) || string.IsNullOrEmpty(EditedStudent.FirstName))
             {
                 await _dialogCoordinator.ShowMessageAsync(this, "Заполните обязательные поля (Имя и фамилия)", "Заполните обязательные поля!");
@@ -31,40 +34,40 @@ namespace AKITE.Contingent.Client.ViewModels
                 result = await _dialogCoordinator.ShowMessageAsync(this, "Подтвердите изменения", "Вы действительно хотите подтвердить изменения?", MessageDialogStyle.AffirmativeAndNegative);
                 if (result == MessageDialogResult.Negative) return;
 
-                await _dataCoordinator.StudentDataService.UpdateStudent(EditedStudent.Id, EditedStudent);
+                await _dataCoordinator.StudentDataService.Update(EditedStudent.Id, EditedStudent);
             }
             else
             {
                 result = await _dialogCoordinator.ShowMessageAsync(this, "Подтвердите добавление", "Вы действительно хотите добавить нового студента?", MessageDialogStyle.AffirmativeAndNegative);
                 if (result == MessageDialogResult.Negative) return;
 
-                await _dataCoordinator.StudentDataService.AddStudent(EditedStudent);
+                await _dataCoordinator.StudentDataService.Add(EditedStudent);
             }
 
-            _navigator.GoBack();
+            dialog.Close();
         }
 
         public ICommand CancelCommand { get; }
         private async void Cancel(object obj)
         {
-                var result = await _dialogCoordinator.ShowMessageAsync(this, "Подтвердите отмену", "Вы уверены что хотите отменить? Все изменения будут утеряны!", MessageDialogStyle.AffirmativeAndNegative);
-                if (result == MessageDialogResult.Negative) return;
+            var dialog = obj as MetroWindow;
 
-                _navigator.GoBack();
+            var result = await _dialogCoordinator.ShowMessageAsync(this, "Подтвердите отмену", "Вы уверены что хотите отменить? Все изменения будут утеряны!", MessageDialogStyle.AffirmativeAndNegative);
+            if (result == MessageDialogResult.Negative) return;
+
+            dialog.Close();
         }
         #endregion
 
-        private readonly Navigator _navigator;
         private readonly IDialogCoordinator _dialogCoordinator;
         private readonly DataCoordinator _dataCoordinator;
 
-        public StudentFormViewModel(Student selectedStudent, DataCoordinator dataCoordinator, Navigator navigator, IDialogCoordinator dialogCoordinator)
+        public StudentFormViewModel(Student selectedStudent, DataCoordinator dataCoordinator, IDialogCoordinator dialogCoordinator)
         {
             _dataCoordinator = dataCoordinator;
-            _navigator = navigator;
             _dialogCoordinator = dialogCoordinator;
 
-            SaveCommand = new RelayCommand(SaveStudent);
+            SaveCommand = new RelayCommand(SaveStudent, (obj) => !(string.IsNullOrEmpty(EditedStudent.LastName) || string.IsNullOrEmpty(EditedStudent.FirstName)));
             CancelCommand = new RelayCommand(Cancel);
 
             if (selectedStudent != null)

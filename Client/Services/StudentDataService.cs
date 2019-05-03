@@ -6,41 +6,36 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows;
+using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Helpers;
 using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Services
 {
-    public class StudentDataService : BaseBindable
+    public class StudentDataService : BaseDataService<Student>
     {
         private readonly HttpClient _http;
 
-        private BindingList<Student> _students;
-        public BindingList<Student> Students
+        public StudentDataService() : base()
         {
-            get => _students;
-            set
-            {
-                _students = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public StudentDataService()
-        {
+            if (SettingsManager.GetBool("LocalMode")) return;
             _http = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:5001/")
+                BaseAddress = new Uri(SettingsManager.GetString("ApiBase"))
             };
             _http.DefaultRequestHeaders.Accept.Clear();
             _http.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-
-            Students = new BindingList<Student>();
         }
 
-        public async Task AddStudent(Student student)
+        public override async Task Add(Student student)
         {
+            if (SettingsManager.GetBool("LocalMode")) 
+            {
+                await base.Add(student);
+                return;
+            }
+
             var request = await _http.PostAsJsonAsync("api/students", student);
 
             if (!request.IsSuccessStatusCode)
@@ -50,11 +45,22 @@ namespace AKITE.Contingent.Client.Services
                 return;
             }
 
-            Students.Add(await request.Content.ReadAsAsync<Student>());
+            Items.Add(await request.Content.ReadAsAsync<Student>());
         }
 
-        public async Task DeleteStudent(Student student)
+        public override Task DeleteById(int id)
         {
+            throw new NotImplementedException();
+        }
+
+        public override async Task Delete(Student student)
+        {
+            if (SettingsManager.GetBool("LocalMode")) 
+            {
+                await base.Delete(student);
+                return;
+            }
+
             var request = await _http.DeleteAsync($"api/students/{student.Id}");
 
             if (!request.IsSuccessStatusCode)
@@ -63,11 +69,18 @@ namespace AKITE.Contingent.Client.Services
                 return;
             }
 
-            Students.Remove(student);
+            Items.Remove(student);
         }
 
-        public async Task UpdateStudent(int id, Student student)
+        public override async Task Update(int id, Student student)
         {
+            if (SettingsManager.GetBool("LocalMode")) 
+            {
+                var index = Items.IndexOf(Items.Where(s => s.Id == id).SingleOrDefault());
+                Items[index] = student;
+                return;
+            }
+
             var request = await _http.PutAsJsonAsync($"api/students/{id}", student);
 
             if (!request.IsSuccessStatusCode)
@@ -78,12 +91,30 @@ namespace AKITE.Contingent.Client.Services
                 return;
             }
 
-            var old = Students.SingleOrDefault(s => s.Id == id);
+            var old = Items.SingleOrDefault(s => s.Id == id);
             old = await request.Content.ReadAsAsync<Student>();
         }
 
-        public async Task RefreshStudents()
+        public async Task Transfer(int id, int groupid)
         {
+            if (SettingsManager.GetBool("LocalMode")) 
+            {
+                var index = Items.IndexOf(Items.Where(s => s.Id == id).SingleOrDefault());
+                Items[index].GroupIndex = groupid;
+                return;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public override async Task Refresh()
+        {
+            if (SettingsManager.GetBool("LocalMode")) 
+            {
+                await base.Refresh();
+                return;
+            }
+
             var request = await _http.GetAsync("api/students");
 
             if (!request.IsSuccessStatusCode)
@@ -95,7 +126,7 @@ namespace AKITE.Contingent.Client.Services
 
             var response = await request.Content.ReadAsAsync<BindingList<Student>>();
 
-            Students = response;
+            Items = response;
         }
     }
 }

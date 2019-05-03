@@ -16,38 +16,21 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Models;
+using AKITE.Contingent.Client.ViewModels;
+using MahApps.Metro.Controls;
 
 namespace AKITE.Contingent.Client.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для FastTransferDialog.xaml
     /// </summary>
-    public partial class FastTransferDialog : CustomDialog
+    public partial class FastTransferDialog : MetroWindow
     {
-        public Student Student;
-
-        public IEnumerable<Group> Groups => _dataCoordinator.GroupDataService.Groups;
-
-        public int SelectedGroupIndex { get; set; }
-
-        private readonly DataCoordinator _dataCoordinator;
-
         public FastTransferDialog(Student student, DataCoordinator dataCoordinator)
         {
-            this.Student = student;
-            this._dataCoordinator = dataCoordinator;
             InitializeComponent();
 
-            DataContext = this;
-
-            SelectedGroupIndex = student.GroupIndex;
+            DataContext = new FastTransferDialogViewModel(dataCoordinator, student.Id, student.GroupIndex);
         }
-
-        private RelayCommand transferStudent;
-        public RelayCommand TransferStudent => transferStudent ??
-            (transferStudent = new RelayCommand(obj =>
-            {
-                this.Student.GroupIndex = SelectedGroupIndex;
-            }));
     }
 }

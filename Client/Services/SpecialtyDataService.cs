@@ -4,47 +4,41 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Helpers;
 using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Services
 {
-    public class SpecialtyDataService : BaseBindable
+    public class SpecialtyDataService : BaseDataService<Specialty>
     {
         private readonly HttpClient _http;
 
-        private BindingList<Specialty> _specialties;
-        public BindingList<Specialty> Specialties
+        public SpecialtyDataService() : base()
         {
-            get => _specialties;
-            set
+            if (SettingsManager.GetBool("LocalMode"))
             {
-                _specialties = value;
-                OnPropertyChanged();
+                Items.Add(new Specialty { Id = 0, Name = "Абитуриенты" });
+                return;
             }
-        }
 
-        public SpecialtyDataService()
-        {
             _http = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:5001/")
+                BaseAddress = new Uri(SettingsManager.GetString("ApiBase"))
             };
             _http.DefaultRequestHeaders.Accept.Clear();
             _http.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-
-            _specialties = new BindingList<Specialty>();
         }
 
-        public void AddSpecialty(Specialty specialty)
+        public override async Task Refresh()
         {
-            //if (specialty != null)
-            //    Specialties.Add(specialty);
-        }
+            if (SettingsManager.GetBool("LocalMode")) 
+            {
+                await base.Refresh();
+                return;
+            }
 
-        public async Task RefreshSpecialties()
-        {
             var request = await _http.GetAsync("/api/specialties");
 
             if (!request.IsSuccessStatusCode)
@@ -56,7 +50,7 @@ namespace AKITE.Contingent.Client.Services
 
             var resp = await request.Content.ReadAsAsync<BindingList<Specialty>>();
 
-            _specialties = resp;
+            Items = resp;
         }
     }
 }

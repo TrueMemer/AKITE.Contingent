@@ -5,39 +5,41 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows;
+using AKITE.Contingent.Client.Utilities;
 using AKITE.Contingent.Helpers;
 using AKITE.Contingent.Models;
 
 namespace AKITE.Contingent.Client.Services
 {
-    public class GroupDataService : BaseBindable
+    public class GroupDataService : BaseDataService<Group>
     {
         private readonly HttpClient _http;
 
-        private BindingList<Group> _groups = new BindingList<Group>();
-        public BindingList<Group> Groups
+        public GroupDataService() : base()
         {
-            get => _groups;
-            set
+            if (SettingsManager.GetBool("LocalMode")) 
             {
-                _groups = value;
-                OnPropertyChanged();
+                Items.Add(new Group { Id = 0 });
+                return;
             }
-        }
 
-        public GroupDataService()
-        {
             _http = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:5001/")
+                BaseAddress = new Uri(SettingsManager.GetString("ApiBase"))
             };
             _http.DefaultRequestHeaders.Accept.Clear();
             _http.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task AddGroup(Group group)
+        public override async Task Add(Group group)
         {
+            if (SettingsManager.GetBool("LocalMode")) 
+            {
+                await base.Add(group);
+                return;
+            }
+
             var request = await _http.PostAsJsonAsync("api/groups", group);
 
             if (!request.IsSuccessStatusCode)
@@ -48,11 +50,17 @@ namespace AKITE.Contingent.Client.Services
                 return;
             }
 
-            Groups.Add(await request.Content.ReadAsAsync<Group>());
+            Items.Add(await request.Content.ReadAsAsync<Group>());
         }
 
-        public async Task RefreshGroups()
+        public override async Task Refresh()
         {
+            if (SettingsManager.GetBool("LocalMode")) 
+            {
+                await base.Refresh();
+                return;
+            }
+
             var request = await _http.GetAsync("api/groups");
 
             if (!request.IsSuccessStatusCode)
@@ -64,7 +72,7 @@ namespace AKITE.Contingent.Client.Services
 
             var response = await request.Content.ReadAsAsync<BindingList<Group>>();
 
-            Groups = response;
+            Items = response;
         }
     }
 }

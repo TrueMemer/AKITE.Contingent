@@ -1,0 +1,37 @@
+{
+  "specialties": [
+    {
+      "Id": 0,
+      "Name": "Абитуриенты"
+    },
+    {
+      "Id": 1,
+      "Name": "Тестовая специальность",
+      "Code": "00.00.01",
+      "ShortName": "ТС"
+    }
+  ],
+  "groups": [
+    {
+      "Id": 0
+    },
+    {
+      "Id": 1,
+      "No": 1,
+      "Number": 10,
+      "SpecialtyId": 1
+    },
+    {
+      "Id": 2,
+      "No": 2,
+      "Number": 10,
+      "SpecialtyId": 1
+    },
+    {
+      "Id": 3,
+      "No": 3,
+      "Number": 10,
+      "SpecialtyId": 1
+    }
+  ]
+}

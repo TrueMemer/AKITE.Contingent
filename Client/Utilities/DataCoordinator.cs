@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using AKITE.Contingent.Client.Services;
+using AKITE.Contingent.Client.ViewModels;
+using AKITE.Contingent.Helpers;
 using AKITE.Contingent.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AKITE.Contingent.Client.Utilities
 {
@@ -18,19 +25,29 @@ namespace AKITE.Contingent.Client.Utilities
             StudentDataService = new StudentDataService();
         }
 
-        public async Task Init(string messageIndicator)
+        public void LoadExamples()
         {
+            var example = JObject.Parse(File.ReadAllText(@"exampleData.json", Encoding.UTF8));
+            SpecialtyDataService.Items = JsonConvert.DeserializeObject<BindingList<Specialty>>(example["specialties"].ToString());
+            GroupDataService.Items = JsonConvert.DeserializeObject<BindingList<Group>>(example["groups"].ToString());
+        }
+
+        public async Task Init()
+        {
+            Group.SetSpecialtyService(SpecialtyDataService);
+            Student.SetService(GroupDataService);
+            Group.SetStudentService(StudentDataService);
+            if (SettingsManager.GetBool("LocalMode"))
+            {
+                LoadExamples();
+                return;
+            }
+
             try
             {
-                messageIndicator = "Загрузка специальностей...";
-                await SpecialtyDataService.RefreshSpecialties();
-                Group.SetSpecialtyService(SpecialtyDataService);
-                messageIndicator = "Загрузка групп...";
-                await GroupDataService.RefreshGroups();
-                messageIndicator = "Загрузка студентов";
-                await StudentDataService.RefreshStudents();
-                Student.SetService(GroupDataService);
-                Group.SetStudentService(StudentDataService);
+                await SpecialtyDataService.Refresh();
+                await GroupDataService.Refresh();
+                await StudentDataService.Refresh();
             }
             catch (Exception e)
             {

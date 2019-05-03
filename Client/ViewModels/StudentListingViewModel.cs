@@ -9,12 +9,13 @@ using System.Windows.Input;
 using AKITE.Contingent.Client.Dialogs;
 using AKITE.Contingent.Helpers;
 using AKITE.Contingent.Models;
+using MahApps.Metro.Controls;
 
 namespace AKITE.Contingent.Client.ViewModels
 {
     public class StudentListingViewModel : BaseBindable
     {
-        private Page _studentForm;
+        private MetroWindow _studentForm;
 
         public ObservableCollection<object> SelectedStudents { get; set; }
 
@@ -31,39 +32,25 @@ namespace AKITE.Contingent.Client.ViewModels
 
         #region Команды
         public ICommand FastTransferStudent { get; private set; }
-        private async void FastTransfer(object obj)
+        private void FastTransfer(object obj)
         {
             var dialog = new FastTransferDialog(SelectedStudents[0] as Student, _dataCoordinator);
-
-            dialog.CancelButton.Click += async (s, e) =>
-            {
-                await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
-            };
-
-            dialog.TransferButton.Click += async (s, e) =>
-            {
-                await StudentDataService.UpdateStudent(dialog.Student.Id, dialog.Student);
-                await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
-            };
-
-            await _dialogCoordinator.ShowMetroDialogAsync(this, dialog);
+            dialog.ShowDialog();
         }
 
         public ICommand OpenStudentCommand { get; private set; }
         private void OpenStudentForm(object obj)
         {
             if (SelectedStudents.Count > 1 || SelectedStudents.Count == 0) return;
-            _studentForm = new StudentForm(SelectedStudents[0] as Student, _dataCoordinator, _navigator, _dialogCoordinator);
-
-            _navigator.NavigateTo(_studentForm);
+            _studentForm = new StudentForm(SelectedStudents[0] as Student, _dataCoordinator, _dialogCoordinator);
+            _studentForm.Show();
         }
 
         public ICommand AddStudentCommand { get; private set; }
         private void AddStudentForm(object obj)
         {
-            _studentForm = new StudentForm(null, _dataCoordinator, _navigator, _dialogCoordinator);
-
-            _navigator.NavigateTo(_studentForm);
+            _studentForm = new StudentForm(null, _dataCoordinator, _dialogCoordinator);
+            _studentForm.Show();
         }
 
         public ICommand RemoveStudentCommand { get; private set; }
@@ -95,7 +82,7 @@ namespace AKITE.Contingent.Client.ViewModels
             {
                 if (st is Student s)
                 {
-                    await StudentDataService.DeleteStudent(s);
+                    await StudentDataService.Delete(s);
                 }
             }
 

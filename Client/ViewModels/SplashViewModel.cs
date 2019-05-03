@@ -32,7 +32,7 @@ namespace AKITE.Contingent.Client.ViewModels
         private async void OnWindowLoaded(object obj)
         {
             _dataCoordinator = new DataCoordinator();
-            await _dataCoordinator.Init(Message);
+            await _dataCoordinator.Init();
 
             _mainWindow = new MainWindow(_dataCoordinator);
             _mainWindow.Show();

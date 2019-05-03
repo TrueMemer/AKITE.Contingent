@@ -16,7 +16,7 @@
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\Memer\Desktop\WebSite\</PublishUrl>
+    <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -26,10 +26,9 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
-    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -54,18 +53,6 @@
   <PropertyGroup>
     <ApplicationIcon>
     </ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>ED0B9961BFF0B4C0E683691B46721BFBBB520ED0</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>Client_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=4.0.0.0, Culture=neutral, PublicKeyToken=69f1c32f803d307e, processorArchitecture=MSIL">
@@ -145,14 +132,16 @@
     <Compile Include="Dialogs\FastTransferDialog.xaml.cs">
       <DependentUpon>FastTransferDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\NewGroup.xaml.cs">
-      <DependentUpon>NewGroup.xaml</DependentUpon>
+    <Compile Include="Dialogs\NewGroupDialog.xaml.cs">
+      <DependentUpon>NewGroupDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IDataService.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Services\GroupDataService.cs" />
     <Compile Include="Services\SpecialtyDataService.cs" />
     <Compile Include="Services\StudentDataService.cs" />
+    <Compile Include="Utilities\BaseDataService.cs" />
     <Compile Include="Utilities\DataCoordinator.cs" />
     <Compile Include="Utilities\InvertBooleanConverter.cs" />
     <Compile Include="Utilities\Navigator.cs" />
@@ -172,7 +161,10 @@
     <Compile Include="Pages\Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\SettingsManager.cs" />
+    <Compile Include="ViewModels\FastTransferDialogViewModel.cs" />
     <Compile Include="ViewModels\GroupManagerViewModel.cs" />
+    <Compile Include="ViewModels\NewGroupDialogViewModel.cs" />
     <Compile Include="ViewModels\SplashViewModel.cs" />
     <Compile Include="ViewModels\StudentFormViewModel.cs" />
     <Compile Include="ViewModels\StudentListingViewModel.cs" />
@@ -205,7 +197,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Client_TemporaryKey.pfx" />
+    <None Include="exampleData.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -220,7 +212,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\NewGroup.xaml">
+    <Page Include="Dialogs\NewGroupDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

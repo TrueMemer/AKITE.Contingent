@@ -11,7 +11,7 @@ namespace AKITE.Contingent.Client.ViewModels
 {
     public class GroupManagerViewModel : BaseBindable
     {
-        public IEnumerable<Specialty> Specialties => _dataCoordinator.SpecialtyDataService.Specialties.Skip(1);
+        public IEnumerable<Specialty> Specialties => _dataCoordinator.SpecialtyDataService.Items.Skip(1);
 
         private readonly IDialogCoordinator _dialogCoordinator;
         private readonly DataCoordinator _dataCoordinator;
@@ -45,25 +45,16 @@ namespace AKITE.Contingent.Client.ViewModels
             {
                 _selectedSpecialty = value;
                 OnPropertyChanged();
-                SelectedGroups = _dataCoordinator.GroupDataService.Groups.Where(g => g.SpecialtyId == SelectedSpecialty + 1);
+                SelectedGroups = _dataCoordinator.GroupDataService.Items.Where(g => g.SpecialtyId == SelectedSpecialty + 1);
             }
         }
 
         public ICommand AddGroupCommand { get; private set; }
-        public async void AddGroup(object obj)
+        public void AddGroup(object obj)
         {
-            var dialog = new NewGroup(_dataCoordinator);
-            dialog.SubmitButton.Click += async (s, e) =>
-            {
-                await _dataCoordinator.GroupDataService.AddGroup(new Group { GroupID = int.Parse(dialog.Num), GroupNum = int.Parse(dialog.ID), SpecialtyId = SelectedSpecialty + 1 });
-                SelectedSpecialty += 0;
-                await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
-            };
-            dialog.CancelButton.Click += async (s, e) =>
-            {
-                await _dialogCoordinator.HideMetroDialogAsync(this, dialog);
-            };
-            await _dialogCoordinator.ShowMetroDialogAsync(this, dialog);
+            var dialog = new NewGroupDialog(_dataCoordinator, SelectedSpecialty + 1);
+            dialog.ShowDialog();
+            SelectedSpecialty += 0;
          }
     }
 }

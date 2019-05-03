@@ -16,7 +16,7 @@ namespace AKITE.Contingent.Models
             _groupDataService = groupDataService;
         }
 
-        public Group Group => _groupDataService.Groups.ElementAt(GroupIndex);
+        public Group Group => _groupDataService.Items.ElementAt(GroupIndex);
 
         public string GroupName => Group.ShortName;
         public string SpecialtyName => Group.Specialty.FullName;

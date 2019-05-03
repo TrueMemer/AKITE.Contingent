@@ -32,7 +32,7 @@
         </DockPanel>
         <Syncfusion:SfDataGrid Grid.Row="1"
                                AllowGrouping="True" AllowSorting="True" AutoExpandGroups="True"
-                               ItemsSource="{Binding Path=StudentDataService.Students}" ShowColumnWhenGrouped="False"
+                               ItemsSource="{Binding Path=StudentDataService.Items}" ShowColumnWhenGrouped="False"
                                AutoGenerateColumns="False" GroupCaptionTextFormat=" {Key}"
                                SelectionUnit="Row" NavigationMode="Row" SelectionMode="Extended"
                                SelectedItems="{Binding SelectedStudents}" FilterRowPosition="FixedTop" 
