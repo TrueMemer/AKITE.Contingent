@@ -1,10 +1,13 @@
 ﻿using AKITE.Contingent.Helpers;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AKITE.Contingent.Client.Utilities
 {
@@ -18,6 +21,44 @@ namespace AKITE.Contingent.Client.Utilities
             {
                 _items = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public void Export(ExportMethod m)
+        {
+            switch (m)
+            {
+                case ExportMethod.JSON:
+                {
+                    var s = new SaveFileDialog();
+                    s.Title = "Выберите место для экспорта";
+                    s.Filter = "JSON file|*.json";
+                    s.ShowDialog();
+
+                    string data = JsonConvert.SerializeObject(this.Items);
+
+                    if(s.FileName != "")  
+                    {
+                        System.IO.FileStream fs = null;
+
+                        try
+                        {
+                            fs = (System.IO.FileStream)s.OpenFile();
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show($"Не удалось открыть файл для экспорта:\n{e.Message}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                            break;
+                        }
+
+                        byte[] bytes = new UTF8Encoding(true).GetBytes(data);
+
+                        fs.Write(bytes, 0, bytes.Length);
+                        fs.Close();
+
+                        MessageBox.Show("Экспорт выполнен успешно!", "Экспорт выполнен!", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                } break;
             }
         }
 

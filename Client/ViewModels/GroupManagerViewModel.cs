@@ -24,6 +24,7 @@ namespace AKITE.Contingent.Client.ViewModels
             SelectedSpecialty += 0;
 
             AddGroupCommand = new RelayCommand(AddGroup);
+            Export = new RelayCommand(ExportAll);
         }
 
         private IEnumerable<Group> _selectedGroups;
@@ -55,6 +56,13 @@ namespace AKITE.Contingent.Client.ViewModels
             var dialog = new NewGroupDialog(_dataCoordinator, SelectedSpecialty + 1);
             dialog.ShowDialog();
             SelectedSpecialty += 0;
-         }
+        }
+
+        public ICommand Export { get; private set; }
+        public void ExportAll(object method)
+        {
+            ExportMethod m = (ExportMethod)method;
+            _dataCoordinator.GroupDataService.Export(m);
+        }
     }
 }

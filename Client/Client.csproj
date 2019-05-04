@@ -142,6 +142,7 @@
     <Compile Include="Services\SpecialtyDataService.cs" />
     <Compile Include="Services\StudentDataService.cs" />
     <Compile Include="Utilities\BaseDataService.cs" />
+    <Compile Include="Utilities\ExportMethod.cs" />
     <Compile Include="Utilities\DataCoordinator.cs" />
     <Compile Include="Utilities\InvertBooleanConverter.cs" />
     <Compile Include="Utilities\Navigator.cs" />

@@ -6,6 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:Syncfusion="http://schemas.syncfusion.com/wpf"
       xmlns:local="clr-namespace:AKITE.Contingent.Client.Pages"
+      xmlns:utils="clr-namespace:AKITE.Contingent.Client.Utilities"
       xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       Dialog:DialogParticipation.Register="{Binding}"
@@ -16,9 +17,12 @@
     <Grid>
         <GroupBox Padding="0 0 0 0" Header="Менеджер групп">
             <StackPanel>
-                <Menu >
+                <Menu>
                     <Metro:SplitButton DisplayMemberPath="FullName" SelectedIndex="{Binding SelectedSpecialty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0 1 0 0" MinWidth="150" ItemsSource="{Binding Specialties}"/>
                     <MenuItem Padding="-1 9 5 5" Command="{Binding AddGroupCommand}" Icon="{iconPacks:FontAwesome Kind=PlusSolid}" Header="Добавить группу"/>
+                    <MenuItem Padding="-1 9 5 5" Header="Экспорт в файл" Icon="{iconPacks:FontAwesome Kind=FileExportSolid}">
+                        <MenuItem Header="JSON (.json)" Command="{Binding Export}" CommandParameter="{x:Static utils:ExportMethod.JSON}"></MenuItem>
+                    </MenuItem>
                 </Menu>
                 <Syncfusion:SfDataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedGroups}">
                     <Syncfusion:SfDataGrid.Columns>

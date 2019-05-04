@@ -27,9 +27,28 @@ namespace AKITE.Contingent.Client.Utilities
 
         public void LoadExamples()
         {
-            var example = JObject.Parse(File.ReadAllText(@"exampleData.json", Encoding.UTF8));
-            SpecialtyDataService.Items = JsonConvert.DeserializeObject<BindingList<Specialty>>(example["specialties"].ToString());
-            GroupDataService.Items = JsonConvert.DeserializeObject<BindingList<Group>>(example["groups"].ToString());
+            JObject example;
+            try
+            {
+                example = JObject.Parse(File.ReadAllText(@"exampleData.json", Encoding.UTF8));
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                MessageBox.Show("Файл с примерными данными не найден!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            catch (Newtonsoft.Json.JsonReaderException e)
+            {
+                MessageBox.Show($"Файл с примерными данными был в некорректном формате:\n{e.Message}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (example["students"] != null)
+                StudentDataService.Items = JsonConvert.DeserializeObject<BindingList<Student>>(example["students"].ToString());
+            if (example["specialties"] != null)
+                SpecialtyDataService.Items = JsonConvert.DeserializeObject<BindingList<Specialty>>(example["specialties"].ToString());
+            if (example["groups"] != null)
+                GroupDataService.Items = JsonConvert.DeserializeObject<BindingList<Group>>(example["groups"].ToString());
         }
 
         public async Task Init()
